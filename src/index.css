@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap');
+
+@theme {
+  --font-family-sans: 'DM Sans', system-ui, sans-serif;
+  --color-hot-pink: #FF1493;
+  --color-brand-black: #101010;
+  --color-brand-gray: #F5F5F5;
+  --color-brand-white: #FFFFFF;
+  --color-primary: #FF1493;
+  --color-primary-dark: #D9117F;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #101010;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family-sans);
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 20px rgba(255, 20, 147, 0.15);
+  border-radius: 16px;
+}
+
+.corporate-clean {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+}
