@@ -5,15 +5,15 @@ import { Quote, ChevronLeft, ChevronRight } from 'lucide-react'
 const reviews = [
   {
     id: 1,
-    name: 'Sarah Ahmad',
-    title: 'CEO, TechVenture Malaysia',
+    name: 'Michael Chen',
+    title: 'Director, Apex Consulting',
     image: '/review/review1.png',
     quote: 'KaFlix Space transformed our annual tech summit into an unforgettable experience. The facilities and service were impeccable.'
   },
   {
     id: 2,
-    name: 'Michael Chen',
-    title: 'Director, Apex Consulting',
+    name: 'Sarah Ahmad',
+    title: 'CEO, TechVenture Malaysia',
     image: '/review/review2.png',
     quote: 'Professional, clean, and inspiring. The best venue we have worked with for our corporate training programs.'
   },
@@ -33,7 +33,7 @@ const reviews = [
   },
   {
     id: 5,
-    name: 'Lisa Tan',
+    name: 'David Tan',
     title: 'Managing Director, CreativeHub',
     image: '/review/review5.png',
     quote: 'An inspiring environment that truly fosters creativity and collaboration. Our team productivity has never been higher.'
