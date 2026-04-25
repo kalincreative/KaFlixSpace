@@ -49,7 +49,7 @@ export default function WhyChooseSection() {
 
           <div>
             <img
-              src="https://images.unsplash.com/photo-1556761175-5973dc0f32d7?auto=format&fit=crop&w=1000&q=80"
+              src="/advantage.jpg"
               alt="Corporate meeting room"
               className="w-full h-[500px] object-cover rounded-3xl shadow-2xl"
             />
