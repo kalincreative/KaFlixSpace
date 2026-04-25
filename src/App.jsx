@@ -6,6 +6,7 @@ import Booking from './pages/Booking'
 import Admin from './pages/Admin'
 import Login from './pages/Login'
 import Navbar from './components/Navbar'
+import VenueDetails from './pages/VenueDetails'
 
 export default function App() {
   const [user, setUser] = useState(null)
@@ -39,6 +40,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/spaces" element={<SpacesPage />} />
+          <Route path="/spaces/:id" element={<VenueDetails />} />
           <Route path="/gallery" element={<Home />} />
           <Route path="/news" element={<Home />} />
           <Route path="/contact" element={<Home />} />
