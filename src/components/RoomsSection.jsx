@@ -8,7 +8,7 @@ const featuredSpaces = [
     name: 'Grand Seminar Hall',
     capacity: '120 Seats',
     location: 'Main Building, Floor 1',
-    price: '$120',
+    price: 'RM120',
     image: '/Spaces/Grand Seminar Hall.png'
   },
   {
@@ -16,7 +16,7 @@ const featuredSpaces = [
     name: 'Executive Boardroom',
     capacity: '20 Seats',
     location: 'Tower A, Floor 10',
-    price: '$80',
+    price: 'RM80',
     image: '/Spaces/Executive Boardroom.png'
   },
   {
@@ -24,7 +24,7 @@ const featuredSpaces = [
     name: 'Creative Workshop',
     capacity: '30 Seats',
     location: 'Innovation Hub, Floor 3',
-    price: '$60',
+    price: 'RM60',
     image: '/Spaces/Creative Workshop.png'
   },
   {
@@ -32,7 +32,7 @@ const featuredSpaces = [
     name: 'Focus Pod',
     capacity: '6 Seats',
     location: 'Main Building, Floor 2',
-    price: '$35',
+    price: 'RM35',
     image: '/Spaces/Focus Pod.png'
   }
 ]
