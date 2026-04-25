@@ -62,9 +62,6 @@ export default function VenueDetails() {
     const newErrors = {}
     if (!formData.date) newErrors.date = 'Date is required'
     if (!formData.timeSlot) newErrors.timeSlot = 'Time slot is required'
-    if (!formData.name) newErrors.name = 'Name is required'
-    if (!formData.email) newErrors.email = 'Email is required'
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Invalid email'
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -83,10 +80,9 @@ export default function VenueDetails() {
     addToCart({
       spaceId: space.id,
       spaceName: space.name,
+      location: space.location,
       date: formData.date,
       timeSlot: formData.timeSlot,
-      name: formData.name,
-      email: formData.email,
       addons: selectedAddons,
       basePrice,
       addonsTotal,
@@ -232,30 +228,6 @@ export default function VenueDetails() {
                     <option>06:00 PM - 09:00 PM</option>
                   </select>
                   {errors.timeSlot && <p className="text-red-500 text-xs mt-1 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors.timeSlot}</p>}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-neutral-700 mb-2">Full Name</label>
-                  <input
-                    type="text"
-                    placeholder="Your name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-[#FF1493]/50 ${errors.name ? 'border-red-500' : 'border-neutral-200'}`}
-                  />
-                  {errors.name && <p className="text-red-500 text-xs mt-1 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors.name}</p>}
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-neutral-700 mb-2">Corporate Email</label>
-                  <input
-                    type="email"
-                    placeholder="you@company.com"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className={`w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-[#FF1493]/50 ${errors.email ? 'border-red-500' : 'border-neutral-200'}`}
-                  />
-                  {errors.email && <p className="text-red-500 text-xs mt-1 flex items-center gap-1"><AlertCircle className="w-3 h-3" />{errors.email}</p>}
                 </div>
 
                 {addonsTotal > 0 && (

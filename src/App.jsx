@@ -7,6 +7,7 @@ import Admin from './pages/Admin'
 import Login from './pages/Login'
 import Navbar from './components/Navbar'
 import VenueDetails from './pages/VenueDetails'
+import Checkout from './pages/Checkout'
 import { ReservationProvider } from './context/ReservationContext'
 import ReservationDrawer from './components/ReservationDrawer'
 
@@ -44,6 +45,7 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="/spaces/:id" element={<VenueDetails />} />
             <Route path="/spaces" element={<SpacesPage />} />
+            <Route path="/checkout" element={<Checkout />} />
             <Route path="/gallery" element={<Home />} />
             <Route path="/news" element={<Home />} />
             <Route path="/contact" element={<Home />} />

@@ -1,7 +1,9 @@
-import { X, Trash2 } from 'lucide-react'
+import { X } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { useReservation } from '../context/ReservationContext'
 
 export default function ReservationDrawer() {
+  const navigate = useNavigate()
   const { cart, removeFromCart, isOpen, setIsOpen, total } = useReservation()
 
   if (!isOpen) return null
@@ -68,7 +70,10 @@ export default function ReservationDrawer() {
             <span className="text-neutral-600">Estimated Total</span>
             <span className="text-2xl font-bold text-neutral-900">RM{total}</span>
           </div>
-          <button className="w-full bg-[#FF1493] text-white rounded-lg py-4 hover:opacity-90 transition-colors font-semibold">
+          <button 
+            onClick={() => { setIsOpen(false); navigate('/checkout'); }}
+            className="w-full bg-[#FF1493] text-white rounded-lg py-4 hover:opacity-90 transition-colors font-semibold"
+          >
             Confirm & Checkout
           </button>
         </div>
