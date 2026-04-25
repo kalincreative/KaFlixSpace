@@ -26,7 +26,7 @@ const reviews = [
   },
   {
     id: 4,
-    name: 'James Wong',
+    name: 'Emily Wong',
     title: 'VP Operations, FinanceHub',
     image: '/review/review4.png',
     quote: 'The attention to detail and premium amenities make KaFlix Space our go-to choice for important client meetings.'
