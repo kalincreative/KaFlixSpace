@@ -48,9 +48,9 @@ export default function Footer() {
         <div className="border-t border-neutral-100 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-neutral-500">
           <p>© 2026 KaFlix Space. All rights reserved.</p>
           <div className="flex gap-4 mt-4 md:mt-0">
-            <a href="#" className="hover:text-[#FF1493]">LinkedIn</a>
-            <a href="#" className="hover:text-[#FF1493]">Twitter</a>
-            <a href="#" className="hover:text-[#FF1493]">Instagram</a>
+            <a href="https://www.threads.com/@itskalin_" target="_blank" rel="noopener noreferrer" className="hover:text-[#FF1493]">Threads</a>
+            <a href="https://www.instagram.com/itskalin_/" target="_blank" rel="noopener noreferrer" className="hover:text-[#FF1493]">Instagram</a>
+            <a href="http://www.tiktok.com/@itskalin_" target="_blank" rel="noopener noreferrer" className="hover:text-[#FF1493]">TikTok</a>
           </div>
         </div>
       </div>
