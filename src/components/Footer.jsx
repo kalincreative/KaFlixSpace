@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Linkedin, Twitter, Instagram } from 'lucide-react'
+import { MapPin, Mail, Phone } from 'lucide-react'
 
 export default function Footer() {
   return (
@@ -38,9 +38,9 @@ export default function Footer() {
           <div>
             <h4 className="font-semibold text-neutral-900 mb-4">Contact</h4>
             <ul className="flex flex-col gap-2 text-sm text-neutral-500">
-              <li>hello@kaflixspace.com</li>
-              <li>+60 3 1234 5678</li>
-              <li>Kuala Lumpur, Malaysia</li>
+              <li className="flex items-center gap-2"><Mail className="w-4 h-4" />hello@kaflixspace.com</li>
+              <li className="flex items-center gap-2"><Phone className="w-4 h-4" />+60 3 1234 5678</li>
+              <li className="flex items-center gap-2"><MapPin className="w-4 h-4" />Kuala Lumpur, Malaysia</li>
             </ul>
           </div>
         </div>
@@ -48,9 +48,9 @@ export default function Footer() {
         <div className="border-t border-neutral-100 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-neutral-500">
           <p>© 2026 KaFlix Space. All rights reserved.</p>
           <div className="flex gap-4 mt-4 md:mt-0">
-            <a href="#" className="hover:text-[#FF1493]"><Linkedin className="w-5 h-5" /></a>
-            <a href="#" className="hover:text-[#FF1493]"><Twitter className="w-5 h-5" /></a>
-            <a href="#" className="hover:text-[#FF1493]"><Instagram className="w-5 h-5" /></a>
+            <a href="#" className="hover:text-[#FF1493]">LinkedIn</a>
+            <a href="#" className="hover:text-[#FF1493]">Twitter</a>
+            <a href="#" className="hover:text-[#FF1493]">Instagram</a>
           </div>
         </div>
       </div>
