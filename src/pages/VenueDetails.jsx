@@ -1,5 +1,6 @@
 import { useParams, Link } from 'react-router-dom'
-import { Users, MapPin, Monitor, Wifi, PenTool,Volume2, Coffee, ArrowLeft } from 'lucide-react'
+import { useState } from 'react'
+import { Users, MapPin, Monitor, Wifi, PenTool, Volume2, Coffee, Plus, Check, ShoppingCart } from 'lucide-react'
 
 const spaces = [
   { id: 1, name: 'Grand Seminar Hall', capacity: 120, price: 'RM150', image: '/Spaces/Grand Seminar Hall.png', location: 'Level 3, Tower A', description: 'Our flagship Grand Seminar Hall is an expansive, architecturally stunning venue designed for large-scale conferences, keynote presentations, and corporate events. Featuring a 200-inch 4K projection wall, professional-grade acoustics, and seating for up to 120 guests, this space sets the stage for unforgettable moments. The floor-to-ceiling glass windows flood the room with natural light, while the dark wood paneling and premium carpet create an atmosphere of sophistication and focus.' },
@@ -22,9 +23,32 @@ const amenities = [
   { icon: Coffee, label: 'Artisan Coffee' },
 ]
 
+const add-ons = [
+  { id: 1, name: 'Premium Catering (Lunch & Tea)', description: 'Artisan buffet setup', price: 50, unit: '/pax' },
+  { id: 2, name: 'Dedicated AV Technician', description: 'On-site support for the entire duration', price: 150, unit: '/flat' },
+  { id: 3, name: 'Extended Whiteboard Setup', description: '3 extra mobile glass whiteboards', price: 50, unit: '/flat' },
+]
+
 export default function VenueDetails() {
   const { id } = useParams()
   const space = spaces.find(s => s.id === Number(id))
+  const [selectedAddons, setSelectedAddons] = useState([])
+
+  const basePrice = space ? parseInt(space.price.replace('RM', '')) : 0
+  const addonsTotal = selectedAddons.reduce((sum, addonId) => {
+    const addon = add-ons.find(a => a.id === addonId)
+    return sum + (addon ? addon.price : 0)
+  }, 0)
+  const totalPrice = basePrice + addonsTotal
+  const reservationCount = 0
+
+  const toggleAddon = (addonId) => {
+    setSelectedAddons(prev => 
+      prev.includes(addonId) 
+        ? prev.filter(id => id !== addonId)
+        : [...prev, addonId]
+    )
+  }
 
   if (!space) {
     return (
@@ -35,7 +59,6 @@ export default function VenueDetails() {
             to="/spaces"
             className="inline-flex items-center gap-2 px-6 py-3 bg-[#FF1493] text-white rounded-lg hover:scale-[1.02] transition-transform"
           >
-            <ArrowLeft className="w-4 h-4" />
             Back to Spaces
           </Link>
         </div>
@@ -85,12 +108,44 @@ export default function VenueDetails() {
                 ))}
               </div>
             </div>
+
+            <div>
+              <h2 className="text-2xl font-bold mt-12 mb-6">Optional Add-ons</h2>
+              {add-ons.map(addon => (
+                <div 
+                  key={addon.id}
+                  onClick={() => toggleAddon(addon.id)}
+                  className={`border rounded-xl p-4 flex justify-between items-center mb-3 cursor-pointer transition-colors ${
+                    selectedAddons.includes(addon.id) 
+                      ? 'border-pink-500 bg-pink-50' 
+                      : 'border-neutral-200 hover:border-pink-500'
+                  }`}
+                >
+                  <div>
+                    <h3 className="font-semibold text-neutral-900">{addon.name}</h3>
+                    <p className="text-neutral-500 text-sm">{addon.description}</p>
+                    <p className="text-pink-600 font-medium mt-1">+RM {addon.price} {addon.unit}</p>
+                  </div>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                    selectedAddons.includes(addon.id)
+                      ? 'bg-[#FF1493] text-white'
+                      : 'bg-neutral-100 text-neutral-400'
+                  }`}>
+                    {selectedAddons.includes(addon.id) ? (
+                      <Check className="w-5 h-5" />
+                    ) : (
+                      <Plus className="w-5 h-5" />
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
           <div className="lg:col-span-1">
             <div className="sticky top-24 bg-white rounded-2xl shadow-xl border border-neutral-100 p-6">
               <div className="mb-6">
-                <span className="text-3xl font-bold text-neutral-900">{space.price}</span>
+                <span className="text-3xl font-bold text-neutral-900">RM{totalPrice}</span>
                 <span className="text-neutral-500">/hr</span>
               </div>
 
@@ -131,11 +186,33 @@ export default function VenueDetails() {
                   />
                 </div>
 
+                {addonsTotal > 0 && (
+                  <div className="py-3 border-t border-neutral-100">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-neutral-500">Base Price</span>
+                      <span className="text-neutral-500">RM{basePrice}</span>
+                    </div>
+                    <div className="flex justify-between text-sm mt-1">
+                      <span className="text-neutral-500">Add-ons</span>
+                      <span className="text-neutral-500">+RM{addonsTotal}</span>
+                    </div>
+                  </div>
+                )}
+
                 <button
                   type="submit"
-                  className="w-full py-3 bg-[#FF1493] text-white rounded-lg hover:scale-[1.02] transition-transform font-semibold"
+                  className="w-full py-3 bg-[#FF1493] text-white rounded-lg hover:scale-[1.02] transition-transform font-semibold flex items-center justify-center gap-2"
                 >
-                  Request to Book
+                  <Plus className="w-5 h-5" />
+                  Add to Reservation
+                </button>
+
+                <button
+                  type="button"
+                  className="w-full py-2 text-pink-500 hover:bg-pink-50 rounded-lg mt-2 flex items-center justify-center gap-2 font-medium"
+                >
+                  <ShoppingCart className="w-4 h-4" />
+                  View My Reservation ({reservationCount} items)
                 </button>
               </form>
             </div>
