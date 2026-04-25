@@ -51,7 +51,7 @@ export default function WhyChooseSection() {
             <img
               src="/advantage.png"
               alt="Corporate meeting room"
-              className="w-full max-h-[400px] object-cover rounded-3xl shadow-2xl"
+              className="w-full max-h-[300px] object-cover rounded-3xl shadow-2xl"
             />
           </div>
         </div>
