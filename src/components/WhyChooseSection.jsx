@@ -36,7 +36,7 @@ export default function WhyChooseSection() {
 
             <div className="flex flex-col gap-6">
               {valuePoints.map((point, idx) => (
-                <div key={idx} className="flex gap-4">
+                <div key={idx} className="flex items-center gap-4">
                   <point.icon className="w-6 h-6 text-[#FF1493] flex-shrink-0" />
                   <div>
                     <h4 className="font-semibold text-neutral-900">{point.title}</h4>
