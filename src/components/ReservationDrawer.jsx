@@ -68,7 +68,7 @@ export default function ReservationDrawer() {
             <span className="text-neutral-600">Estimated Total</span>
             <span className="text-2xl font-bold text-neutral-900">RM{total}</span>
           </div>
-          <button className="w-full bg-neutral-900 text-white rounded-lg py-4 hover:bg-neutral-800 transition-colors font-semibold">
+          <button className="w-full bg-[#FF1493] text-white rounded-lg py-4 hover:opacity-90 transition-colors font-semibold">
             Confirm & Checkout
           </button>
         </div>
