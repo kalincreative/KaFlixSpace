@@ -1,23 +1,30 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || ''
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || ''
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+export const supabase = supabaseUrl && supabaseAnonKey 
+  ? createClient(supabaseUrl, supabaseAnonKey)
+  : null
 
 export const bookingsTable = 'bookings'
 
 export const getBookings = async () => {
+  if (!supabase) return []
   const { data, error } = await supabase
     .from(bookingsTable)
     .select('*')
     .order('created_at', { ascending: false })
   
   if (error) throw error
-  return data
+  return data || []
 }
 
 export const createBooking = async (booking) => {
+  if (!supabase) {
+    console.warn('Supabase not configured')
+    return null
+  }
   const { data, error } = await supabase
     .from(bookingsTable)
     .insert([{
@@ -34,6 +41,7 @@ export const createBooking = async (booking) => {
 }
 
 export const updateBookingStatus = async (id, status) => {
+  if (!supabase) return null
   const { data, error } = await supabase
     .from(bookingsTable)
     .update({ status })
