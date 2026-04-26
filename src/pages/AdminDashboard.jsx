@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { LayoutDashboard, Calendar, ChevronDown, Users, Home, Wallet, TrendingUp, CheckCircle, XCircle, LogOut, CreditCard, BarChart3, CalendarDays, Loader2 } from 'lucide-react'
+import { useState, useEffect, useMemo } from 'react'
+import { LayoutDashboard, Calendar, ChevronDown, Users, Home, Wallet, TrendingUp, CheckCircle, XCircle, LogOut, CreditCard, BarChart3, CalendarDays, Loader2, ChevronLeft, ChevronRight, CalendarRange } from 'lucide-react'
 import { supabase, getBookings, updateBookingStatus as supabaseUpdateStatus } from '../lib/supabase'
 
 const sidebarLinks = [
@@ -17,6 +17,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true)
   const [activeLink, setActiveLink] = useState('all-bookings')
   const [openDropdowns, setOpenDropdowns] = useState({ bookings: true, finance: false })
+  const [currentMonth, setCurrentMonth] = useState(new Date())
 
   useEffect(() => {
     fetchBookings()
@@ -48,16 +49,52 @@ export default function AdminDashboard() {
     }
   }
 
+  const getDaysInMonth = (date) => {
+    const year = date.getFullYear()
+    const month = date.getMonth()
+    const firstDay = new Date(year, month, 1)
+    const lastDay = new Date(year, month + 1, 0)
+    const daysInMonth = lastDay.getDate()
+    const startingDay = firstDay.getDay()
+    
+    const days = []
+    for (let i = 0; i < startingDay; i++) {
+      days.push(null)
+    }
+    for (let i = 1; i <= daysInMonth; i++) {
+      days.push(new Date(year, month, i))
+    }
+    return days
+  }
+
+  const getBookingsForDate = (date) => {
+    if (!date) return []
+    const dateStr = date.toISOString().split('T')[0]
+    return bookings.filter(b => b.booking_date === dateStr)
+  }
+
+  const formatMonthYear = (date) => {
+    return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+  }
+
+  const prevMonth = () => {
+    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))
+  }
+
+  const nextMonth = () => {
+    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1))
+  }
+
   const pendingCount = bookings.filter(b => b.status === 'pending').length
   const totalRevenue = bookings
     .filter(b => b.status === 'approved')
     .reduce((acc, b) => acc + parseFloat(b.total_price || b.price || 0), 0)
 
-  const stats = [
+  const stats = useMemo(() => [
     { label: 'Total Bookings', value: bookings.length, icon: Calendar },
     { label: 'Pending Requests', value: pendingCount, icon: Calendar },
     { label: 'Total Revenue', value: `RM ${totalRevenue.toLocaleString()}`, icon: Wallet },
-  ]
+  ], [bookings, pendingCount, totalRevenue])
 
   const MenuItem = ({ item }) => {
     const isActive = activeLink === item.id
@@ -153,7 +190,9 @@ export default function AdminDashboard() {
 
       <main className="flex-1 p-8">
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-neutral-900">Booking Management</h2>
+          <h2 className="text-2xl font-bold text-neutral-900">
+            {activeLink === 'all-bookings' ? 'Booking Management' : 'Calendar View'}
+          </h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -172,67 +211,143 @@ export default function AdminDashboard() {
           ))}
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-neutral-100 overflow-hidden">
-          {loading ? (
-            <div className="flex items-center justify-center p-12">
-              <Loader2 className="w-8 h-8 text-pink-500 animate-spin" />
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-neutral-50">
-                  <tr>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-600">Client Name</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-600">Space</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-600">Date</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-600">Total Price</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-600">Status</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-600">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-neutral-100">
-                  {bookings.map((booking) => (
-                    <tr key={booking.id} className="hover:bg-neutral-50 transition-colors">
-                      <td className="px-6 py-4 text-sm text-neutral-900">{booking.client_name}</td>
-                      <td className="px-6 py-4 text-sm text-neutral-600">{booking.space_name}</td>
-                      <td className="px-6 py-4 text-sm text-neutral-600">{booking.booking_date}</td>
-                      <td className="px-6 py-4 text-sm text-neutral-900 font-medium">RM {booking.total_price}</td>
-                      <td className="px-6 py-4">
-                        <span className={`inline-flex px-3 py-1 rounded-full text-xs font-medium ${
-                          booking.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
-                          booking.status === 'approved' ? 'bg-green-100 text-green-700' :
-                          'bg-red-100 text-red-700'
-                        }`}>
-                          {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        {booking.status === 'pending' && (
-                          <div className="flex items-center gap-2">
-                            <button
-                              onClick={() => updateStatus(booking.id, 'approved')}
-                              className="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center hover:bg-green-200 transition-colors"
-                              title="Approve"
-                            >
-                              <CheckCircle className="w-4 h-4" />
-                            </button>
-                            <button
-                              onClick={() => updateStatus(booking.id, 'rejected')}
-                              className="w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center hover:bg-red-200 transition-colors"
-                              title="Reject"
-                            >
-                              <XCircle className="w-4 h-4" />
-                            </button>
-                          </div>
-                        )}
-                      </td>
+        {activeLink === 'all-bookings' && (
+          <div className="bg-white rounded-xl shadow-sm border border-neutral-100 overflow-hidden">
+            {loading ? (
+              <div className="flex items-center justify-center p-12">
+                <Loader2 className="w-8 h-8 text-pink-500 animate-spin" />
+              </div>
+            ) : bookings.length === 0 ? (
+              <div className="flex flex-col items-center justify-center p-12 text-center">
+                <CalendarRange className="w-16 h-16 text-neutral-300 mb-4" />
+                <p className="text-lg font-medium text-neutral-600">No bookings found</p>
+                <p className="text-neutral-500 mt-1">Bookings will appear here once customers make reservations.</p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className="bg-neutral-50">
+                    <tr>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-600">Client Name</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-600">Space</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-600">Date</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-600">Total Price</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-600">Status</th>
+                      <th className="px-6 py-4 text-left text-sm font-semibold text-neutral-600">Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="divide-y divide-neutral-100">
+                    {bookings.map((booking) => (
+                      <tr key={booking.id} className="hover:bg-neutral-50 transition-colors">
+                        <td className="px-6 py-4 text-sm text-neutral-900">{booking.client_name}</td>
+                        <td className="px-6 py-4 text-sm text-neutral-600">{booking.space_name}</td>
+                        <td className="px-6 py-4 text-sm text-neutral-600">{booking.booking_date}</td>
+                        <td className="px-6 py-4 text-sm text-neutral-900 font-medium">RM {booking.total_price}</td>
+                        <td className="px-6 py-4">
+                          <span className={`inline-flex px-3 py-1 rounded-full text-xs font-medium ${
+                            booking.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
+                            booking.status === 'approved' ? 'bg-green-100 text-green-700' :
+                            'bg-red-100 text-red-700'
+                          }`}>
+                            {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4">
+                          {booking.status === 'pending' && (
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() => updateStatus(booking.id, 'approved')}
+                                className="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center hover:bg-green-200 transition-colors"
+                                title="Approve"
+                              >
+                                <CheckCircle className="w-4 h-4" />
+                              </button>
+                              <button
+                                onClick={() => updateStatus(booking.id, 'rejected')}
+                                className="w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center hover:bg-red-200 transition-colors"
+                                title="Reject"
+                              >
+                                <XCircle className="w-4 h-4" />
+                              </button>
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeLink === 'calendar' && (
+          <div className="bg-white rounded-xl shadow-sm border border-neutral-100 overflow-hidden">
+            <div className="p-6 border-b border-neutral-100 flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-neutral-900">Monthly Calendar</h3>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={prevMonth}
+                  className="w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center hover:bg-neutral-200 transition-colors"
+                >
+                  <ChevronLeft className="w-4 h-4 text-neutral-600" />
+                </button>
+                <span className="text-sm font-medium text-neutral-700 min-w-[140px] text-center">
+                  {formatMonthYear(currentMonth)}
+                </span>
+                <button
+                  onClick={nextMonth}
+                  className="w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center hover:bg-neutral-200 transition-colors"
+                >
+                  <ChevronRight className="w-4 h-4 text-neutral-600" />
+                </button>
+              </div>
             </div>
-          )}
-        </div>
+            <div className="grid grid-cols-7 gap-px bg-neutral-200">
+              {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                <div key={day} className="bg-neutral-50 p-3 text-center text-sm font-medium text-neutral-500">
+                  {day}
+                </div>
+              ))}
+              {getDaysInMonth(currentMonth).map((date, idx) => {
+                const dayBookings = getBookingsForDate(date)
+                return (
+                  <div
+                    key={idx}
+                    className={`bg-white min-h-[120px] p-2 ${!date ? 'bg-neutral-50' : ''}`}
+                  >
+                    {date && (
+                      <>
+                        <div className="text-sm font-medium text-neutral-500 mb-2">
+                          {date.getDate()}
+                        </div>
+                        <div className="space-y-1">
+                          {dayBookings.slice(0, 3).map((booking) => (
+                            <div
+                              key={booking.id}
+                              className={`text-xs px-2 py-1 rounded truncate ${
+                                booking.status === 'approved' ? 'bg-green-100 text-green-700' :
+                                booking.status === 'pending' ? 'bg-yellow-100 text-yellow-700' :
+                                'bg-red-100 text-red-700'
+                              }`}
+                            >
+                              {booking.client_name} - {booking.space_name}
+                            </div>
+                          ))}
+                          {dayBookings.length > 3 && (
+                            <div className="text-xs text-neutral-500 pl-2">
+                              +{dayBookings.length - 3} more
+                            </div>
+                          )}
+                        </div>
+                      </>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        )}
       </main>
     </div>
   )
