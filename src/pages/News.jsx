@@ -48,9 +48,9 @@ export default function News() {
           {articles.map((article, idx) => (
             <div 
               key={article.id}
-              className={`bg-white rounded-2xl overflow-hidden border border-neutral-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all flex flex-col md:flex-row ${idx === 0 ? 'md:flex-col' : ''}`}
+              className={`bg-white rounded-2xl overflow-hidden border border-neutral-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all flex flex-col md:flex-row`}
             >
-              <div className={`${idx === 0 ? 'md:w-full aspect-video' : 'md:w-1/3 aspect-video md:aspect-auto'}`}>
+              <div className="md:w-1/3 aspect-video md:aspect-auto">
                 <img 
                   src={article.image} 
                   alt={article.title}
@@ -64,7 +64,7 @@ export default function News() {
                   </span>
                   <span className="text-neutral-400 text-sm">{article.date}</span>
                 </div>
-                <h2 className={`font-bold text-neutral-900 mb-2 ${idx === 0 ? 'text-2xl' : 'text-xl'}`}>{article.title}</h2>
+                <h2 className="text-xl font-bold text-neutral-900 mb-2">{article.title}</h2>
                 <p className="text-neutral-600 mb-4">{article.excerpt}</p>
                 <Link 
                   to={`/news/${article.id}`} 
