@@ -91,7 +91,8 @@ export default function AdminDashboard() {
     const dateStrDMY = `${day}-${month}-${year}`
     const dateStrYMD = `${year}-${month}-${day}`
     return bookings.filter(b => {
-      const bookingDate = b.booking_date ? b.booking_date.split('T')[0] : b.booking_date
+      const rawDate = b.booking_date || ''
+      const bookingDate = rawDate.split('T')[0]
       const matchesDate = bookingDate === dateStrDMY || bookingDate === dateStrYMD
       const matchesStatus = statusFilter === 'all' || b.status === statusFilter
       return matchesDate && matchesStatus
@@ -100,9 +101,15 @@ export default function AdminDashboard() {
 
   const formatDate = (dateStr) => {
     if (!dateStr) return ''
-    const date = dateStr.split('T')[0]
-    const [year, month, day] = date.split('-')
-    return `${day}-${month}-${year}`
+    const raw = dateStr.split('T')[0]
+    if (raw.includes('-')) {
+      const parts = raw.split('-')
+      if (parts[0].length === 4) {
+        return `${parts[2]}-${parts[1]}-${parts[0]}`
+      }
+      return raw
+    }
+    return raw
   }
 
   const formatMonthYear = (date) => {
