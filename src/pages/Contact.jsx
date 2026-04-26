@@ -19,8 +19,8 @@ export default function Contact() {
     <div className="min-h-screen pt-20 bg-neutral-50">
       <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[calc(100vh-80px)]">
         <div className="bg-neutral-900 p-12 flex flex-col justify-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">Get in Touch</h1>
-          <p className="text-neutral-400 text-lg mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">Get in Touch</h1>
+          <p className="text-neutral-400 max-w-2xl mx-auto text-lg mb-12">
             Have questions about our spaces? We'd love to hear from you.
           </p>
 

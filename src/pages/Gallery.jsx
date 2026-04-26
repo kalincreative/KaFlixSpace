@@ -38,17 +38,19 @@ const gridSpans = [
 
 export default function Gallery() {
   return (
-    <div className="min-h-screen pt-20 bg-white">
-      <section className="py-16 bg-white">
+<div className="min-h-screen pt-20 bg-neutral-50">
+      <section className="py-16 bg-neutral-50">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <h1 className="text-5xl md:text-6xl font-serif font-light text-neutral-900 mb-3 tracking-tight">Gallery</h1>
-          <p className="text-neutral-400 text-sm tracking-widest uppercase">A Glimpse Into Our Space</p>
+          <h1 className="text-4xl md:text-5xl font-bold text-neutral-900 mb-4">Gallery</h1>
+          <p className="text-neutral-400 max-w-2xl mx-auto text-lg">
+            A Glimpse Into Our Space
+          </p>
         </div>
       </section>
 
       <section className="px-4 pb-16">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-6 gap-4 bg-white">
+          <div className="grid grid-cols-6 gap-4 bg-neutral-50">
             {images.map((img, idx) => (
               <div
                 key={idx}
