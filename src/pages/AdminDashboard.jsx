@@ -83,6 +83,13 @@ const getBookingsForDate = (date) => {
     })
   }
 
+  const formatDate = (dateStr) => {
+    if (!dateStr) return ''
+    const date = dateStr.split('T')[0]
+    const [year, month, day] = date.split('-')
+    return `${day}-${month}-${year}`
+  }
+
   const formatMonthYear = (date) => {
     return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
   }
@@ -251,7 +258,7 @@ const getBookingsForDate = (date) => {
                       <tr key={booking.id} className="hover:bg-neutral-50 transition-colors">
                         <td className="px-6 py-4 text-sm text-neutral-900">{booking.client_name}</td>
                         <td className="px-6 py-4 text-sm text-neutral-600">{booking.space_name}</td>
-                        <td className="px-6 py-4 text-sm text-neutral-600">{booking.booking_date}</td>
+                        <td className="px-6 py-4 text-sm text-neutral-600">{formatDate(booking.booking_date)}</td>
                         <td className="px-6 py-4 text-sm text-neutral-900 font-medium">RM {booking.total_price}</td>
                         <td className="px-6 py-4">
                           <span className={`inline-flex px-3 py-1 rounded-full text-xs font-medium ${
