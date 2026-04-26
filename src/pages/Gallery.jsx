@@ -1,11 +1,10 @@
-import { useState } from 'react'
-
 const images = [
-  { src: '/Gallery/gallery1.png', name: 'Event Space 1' },
+  { src: '/Gallery/gallery1.png', name: 'Event Space 1', span: 'large' },
   { src: '/Gallery/gallery2.png', name: 'Event Space 2' },
   { src: '/Gallery/gallery3.png', name: 'Event Space 3' },
   { src: '/Gallery/gallery4.png', name: 'Event Space 4' },
   { src: '/Gallery/gallery5.png', name: 'Event Space 5' },
+  { src: '/advantage.png', name: 'Premium Atmosphere' },
   { src: '/Spaces/Grand Seminar Hall.png', name: 'Grand Seminar Hall' },
   { src: '/Spaces/Tech Innovation Lab.png', name: 'Tech Innovation Lab' },
   { src: '/Spaces/Executive Boardroom.png', name: 'Executive Boardroom' },
@@ -17,7 +16,6 @@ const images = [
   { src: '/Spaces/Focus Pod.png', name: 'Focus Pod' },
   { src: '/Spaces/Zen Huddle Space.png', name: 'Zen Huddle Space' },
   { src: '/hero-image.png', name: 'Main Event Space' },
-  { src: '/advantage.png', name: 'Premium Atmosphere' },
 ]
 
 export default function Gallery() {
@@ -35,57 +33,17 @@ export default function Gallery() {
       <section className="py-12 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {images.slice(0, 4).map((img, idx) => (
-              <div 
+            {images.map((img, idx) => (
+              <div
                 key={idx}
-                className={`relative overflow-hidden rounded-2xl group cursor-pointer ${
-                  idx === 0 ? 'md:col-span-2 md:row-span-2' : ''
+                className={`relative overflow-hidden rounded-2xl group cursor-pointer h-64 ${
+                  img.span === 'large' ? 'md:col-span-2 md:row-span-2 h-auto' : ''
                 }`}
               >
-                <img 
-                  src={img.src} 
+                <img
+                  src={img.src}
                   alt={img.name}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                  <span className="text-white font-semibold text-lg">{img.name}</span>
-                </div>
-              </div>
-            ))}
-            <div className="grid grid-cols-2 gap-6 md:col-span-2 lg:col-span-3">
-              <div className="relative overflow-hidden rounded-2xl group cursor-pointer h-64 md:h-80">
-                <img 
-                  src={images[4].src} 
-                  alt={images[4].name}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                  <span className="text-white font-semibold text-lg">{images[4].name}</span>
-                </div>
-              </div>
-              <div className="relative overflow-hidden rounded-2xl group cursor-pointer h-64 md:h-80">
-                <img 
-                  src={images[17].src} 
-                  alt={images[17].name}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                  <span className="text-white font-semibold text-lg">{images[17].name}</span>
-                </div>
-              </div>
-            </div>
-            {images.slice(5, 17).map((img, idx) => (
-              <div 
-                key={idx + 5}
-                className="relative overflow-hidden rounded-2xl group cursor-pointer"
-              >
-                <img 
-                  src={img.src} 
-                  alt={img.name}
-                  className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
