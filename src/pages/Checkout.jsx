@@ -176,7 +176,7 @@ export default function Checkout() {
                 </p>
                 
                 <div className="text-xs text-neutral-500 bg-green-50 px-3 py-2 rounded-lg mb-3">
-                  + Complimentary setup & cleanup time (1 hour total) is included but not charged.
+                  + 30min setup & 30min cleanup buffer is included but not charged.
                 </div>
                 
                 {item.addons && item.addons.length > 0 && (

@@ -47,7 +47,7 @@ export default function ReservationDrawer() {
                     {item.date} • {item.timeRange}
                   </p>
                   <div className="text-xs text-neutral-500 mb-2">
-                    {item.usageHours.toFixed(1)} hr(s) | + 1hr FREE buffer
+                    {item.usageHours.toFixed(1)} hr(s) | + 30min setup + 30min cleanup (FREE)
                   </div>
                   {item.addons && item.addons.length > 0 && (
                     <ul className="text-sm text-neutral-500 mb-2">

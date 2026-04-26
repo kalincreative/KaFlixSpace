@@ -149,13 +149,13 @@ export default function TrackBooking() {
                   </div>
                 </div>
 
-                {(booking.usage_hours || booking.total_booking_hours) && (
+                {booking.usage_hours || booking.total_booking_hours ? (
                   <div className="bg-green-50 rounded-lg px-3 py-2 mb-4">
                     <p className="text-xs text-neutral-600">
-                      Duration: {booking.usage_hours || 0} hr(s) | + 1hr FREE setup/cleanup buffer
+                      Duration: {booking.usage_hours || 0} hr(s) | + 30min setup + 30min cleanup (FREE)
                     </p>
                   </div>
-                )}
+                ) : null}
 
                 <div className="flex justify-between items-center pt-4 border-t border-neutral-100">
                   <div>
