@@ -14,6 +14,7 @@ import SingleNews from './pages/SingleNews'
 import Contact from './pages/Contact'
 import { ReservationProvider } from './context/ReservationContext'
 import ReservationDrawer from './components/ReservationDrawer'
+import Footer from './components/Footer'
 
 export default function App() {
   const [user, setUser] = useState(null)
@@ -43,23 +44,26 @@ export default function App() {
   return (
     <BrowserRouter>
       <ReservationProvider>
-        <div className="min-h-screen bg-[#F5F5F5]">
+        <div className="flex flex-col min-h-screen bg-[#F5F5F5]">
           <Navbar />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/spaces/:id" element={<VenueDetails />} />
-            <Route path="/spaces" element={<SpacesPage />} />
-            <Route path="/checkout" element={<Checkout />} />
-            <Route path="/gallery" element={<Gallery />} />
-            <Route path="/news" element={<News />} />
-            <Route path="/news/:id" element={<SingleNews />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/booking/:roomId" element={<Booking />} />
-            <Route path="/booking" element={<Booking />} />
-            <Route path="/admin" element={user?.isAdmin ? <Admin /> : <Navigate to="/login" />} />
-            <Route path="/login" element={user ? <Navigate to="/" /> : <Login onLogin={handleLogin} />} />
-          </Routes>
+          <main className="flex-grow">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/spaces/:id" element={<VenueDetails />} />
+              <Route path="/spaces" element={<SpacesPage />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/gallery" element={<Gallery />} />
+              <Route path="/news" element={<News />} />
+              <Route path="/news/:id" element={<SingleNews />} />
+              <Route path="/contact" element={<Contact />} />
+              <Route path="/booking/:roomId" element={<Booking />} />
+              <Route path="/booking" element={<Booking />} />
+              <Route path="/admin" element={user?.isAdmin ? <Admin /> : <Navigate to="/login" />} />
+              <Route path="/login" element={user ? <Navigate to="/" /> : <Login onLogin={handleLogin} />} />
+            </Routes>
+          </main>
           <ReservationDrawer />
+          <Footer />
         </div>
       </ReservationProvider>
     </BrowserRouter>
