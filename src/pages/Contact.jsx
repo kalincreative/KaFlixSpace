@@ -19,9 +19,9 @@ export default function Contact() {
     <div className="min-h-screen pt-20 bg-neutral-50">
       <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[calc(100vh-80px)]">
         <div className="relative bg-cover bg-center p-12 flex flex-col justify-center" style={{ backgroundImage: 'url(/advantage.png)' }}>
-          <div className="absolute inset-0 bg-white/85" />
+          <div className="absolute inset-0 bg-white/95 backdrop-blur-md" />
           <div className="relative z-10">
-            <h1 className="text-4xl md:text-5xl font-bold text-neutral-900 mb-4">Get in Touch</h1>
+            <h1 className="text-4xl md:text-5xl font-extrabold text-neutral-900 mb-4">Get in Touch</h1>
             <p className="text-neutral-600 max-w-2xl mx-auto text-lg mb-12">
               Have questions about our spaces? We'd love to hear from you.
             </p>
@@ -58,11 +58,17 @@ export default function Contact() {
               </div>
             </div>
 
-            <div className="mt-12 h-48 bg-neutral-200 rounded-xl flex items-center justify-center">
-              <div className="text-center">
-                <MapPin className="w-8 h-8 text-neutral-400 mx-auto mb-2" />
-                <p className="text-neutral-500 text-sm">Google Maps Placeholder</p>
-              </div>
+            <div className="mt-12">
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d127482.35520846554!2d101.6169485!3d3.1385059!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31cc362abd08e7d3%3A0x232e17121d3dd30!2sKuala%20Lumpur%2C%20Federal%20Territory%20of%20Kuala%20Lumpur!5e0!3m2!1sen!2smy!4v1714090000000!5m2!1sen!2smy" 
+                width="100%" 
+                height="300" 
+                style={{ border: 0 }} 
+                allowFullScreen="" 
+                loading="lazy" 
+                referrerPolicy="no-referrer-when-downgrade"
+                className="rounded-2xl shadow-inner"
+              />
             </div>
           </div>
         </div>
