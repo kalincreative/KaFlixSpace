@@ -20,20 +20,20 @@ const images = [
 const gridSpans = [
   'md:col-span-2 md:row-span-2',
   'md:col-span-1 md:row-span-1',
-  'md:col-span-1 md:row-span-1',
+  'md:col-span-1 md:row-span-2',
   'md:col-span-2 md:row-span-1',
   'md:col-span-1 md:row-span-1',
   'md:col-span-1 md:row-span-1',
+  'md:col-span-1 md:row-span-2',
+  'md:col-span-2 md:row-span-1',
   'md:col-span-1 md:row-span-1',
   'md:col-span-1 md:row-span-1',
   'md:col-span-2 md:row-span-2',
-  'md:col-span-2 md:row-span-1',
-  'md:col-span-1 md:row-span-1',
-  'md:col-span-1 md:row-span-1',
   'md:col-span-1 md:row-span-1',
   'md:col-span-1 md:row-span-1',
   'md:col-span-2 md:row-span-1',
   'md:col-span-2 md:row-span-1',
+  'md:col-span-1 md:row-span-1',
 ]
 
 export default function Gallery() {
@@ -48,7 +48,7 @@ export default function Gallery() {
 
       <section className="px-4 pb-16">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 auto-rows-[200px] grid-flow-dense">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 auto-rows-[200px] grid-flow-dense">
             {images.map((img, idx) => (
               <div
                 key={idx}
