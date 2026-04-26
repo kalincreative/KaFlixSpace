@@ -5,6 +5,7 @@ const images = [
   { src: '/Gallery/gallery2.png', name: 'Event Space 2' },
   { src: '/Gallery/gallery3.png', name: 'Event Space 3' },
   { src: '/Gallery/gallery4.png', name: 'Event Space 4' },
+  { src: '/Gallery/gallery5.png', name: 'Event Space 5' },
   { src: '/Spaces/Grand Seminar Hall.png', name: 'Grand Seminar Hall' },
   { src: '/Spaces/Tech Innovation Lab.png', name: 'Tech Innovation Lab' },
   { src: '/Spaces/Executive Boardroom.png', name: 'Executive Boardroom' },
