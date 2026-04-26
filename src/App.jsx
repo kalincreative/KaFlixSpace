@@ -14,6 +14,7 @@ import Gallery from './pages/Gallery'
 import News from './pages/News'
 import SingleNews from './pages/SingleNews'
 import Contact from './pages/Contact'
+import TrackBooking from './pages/TrackBooking'
 import { ReservationProvider } from './context/ReservationContext'
 import ReservationDrawer from './components/ReservationDrawer'
 import Footer from './components/Footer'
@@ -58,6 +59,7 @@ export default function App() {
               <Route path="/news" element={<News />} />
               <Route path="/news/:id" element={<SingleNews />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/track" element={<TrackBooking />} />
               <Route path="/booking/:roomId" element={<Booking />} />
               <Route path="/booking" element={<Booking />} />
               <Route path="/admin/login" element={<AdminLogin />} />

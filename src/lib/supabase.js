@@ -29,8 +29,14 @@ export const createBooking = async (booking) => {
     .from(bookingsTable)
     .insert([{
       client_name: booking.clientName,
+      client_email: booking.clientEmail || '',
       space_name: booking.spaceName,
+      location: booking.location || '',
       booking_date: booking.bookingDate,
+      time_range: booking.timeRange || '',
+      usage_hours: booking.usageHours || 0,
+      prep_hours: booking.prepHours || 1,
+      total_booking_hours: booking.totalBookingHours || 0,
       total_price: booking.totalPrice,
       status: 'pending'
     }])
@@ -50,6 +56,18 @@ export const updateBookingStatus = async (id, status) => {
   
   if (error) throw error
   return data[0]
+}
+
+export const getBookingsByEmail = async (email) => {
+  if (!supabase) return []
+  const { data, error } = await supabase
+    .from(bookingsTable)
+    .select('*')
+    .eq('client_email', email.toLowerCase())
+    .order('created_at', { ascending: false })
+  
+  if (error) throw error
+  return data || []
 }
 
 export const clientsTable = 'clients'

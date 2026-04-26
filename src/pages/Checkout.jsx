@@ -46,8 +46,14 @@ export default function Checkout() {
         
         await createBooking({
           clientName: formData.name,
+          clientEmail: formData.email,
           spaceName: item.spaceName,
+          location: item.location,
           bookingDate: formattedDate,
+          timeRange: item.timeRange,
+          usageHours: item.usageHours,
+          prepHours: item.prepHours,
+          totalBookingHours: item.totalBookingHours,
           totalPrice: item.totalPrice
         })
         totalSpent += item.totalPrice
