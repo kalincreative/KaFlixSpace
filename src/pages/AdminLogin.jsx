@@ -66,7 +66,7 @@ export default function AdminLogin() {
         <img
           src="/adminlogin.png"
           alt="Admin Background"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover object-right"
         />
         <div className="absolute inset-0 bg-black/30" />
       </div>
