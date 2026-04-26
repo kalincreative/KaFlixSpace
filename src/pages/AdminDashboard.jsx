@@ -68,15 +68,16 @@ export default function AdminDashboard() {
     return days
   }
 
-  const getBookingsForDate = (date) => {
+const getBookingsForDate = (date) => {
     if (!date) return []
     const day = String(date.getDate()).padStart(2, '0')
     const month = String(date.getMonth() + 1).padStart(2, '0')
     const year = date.getFullYear()
-    const dateStr = `${day}-${month}-${year}`
+    const dateStrDMY = `${day}-${month}-${year}`
+    const dateStrYMD = `${year}-${month}-${day}`
     return bookings.filter(b => {
       const bookingDate = b.booking_date ? b.booking_date.split('T')[0] : b.booking_date
-      const matchesDate = bookingDate === dateStr
+      const matchesDate = bookingDate === dateStrDMY || bookingDate === dateStrYMD
       const matchesStatus = statusFilter === 'all' || b.status === statusFilter
       return matchesDate && matchesStatus
     })
