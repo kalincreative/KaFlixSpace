@@ -88,7 +88,7 @@ export default function RoomsSection() {
                     <span className="text-neutral-500 text-sm">/hr</span>
                   </div>
                   <Link
-                    to={`/booking/${space.id}`}
+                    to="/spaces"
                     className="w-8 h-8 rounded-full bg-[#FF1493] text-white flex items-center justify-center"
                   >
                     <ArrowRight className="w-4 h-4" />

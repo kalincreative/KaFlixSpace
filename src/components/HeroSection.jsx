@@ -35,7 +35,7 @@ export default function HeroSection() {
           </p>
           
           <Link
-            to="/"
+            to="/spaces"
             className="inline-flex items-center gap-2 mt-4 px-6 py-3 text-base font-medium bg-[#FF1493] text-white rounded-lg"
           >
             Explore Space

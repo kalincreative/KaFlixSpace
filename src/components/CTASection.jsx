@@ -15,7 +15,7 @@ export default function CTASection() {
             Join top industry leaders who trust KaFlix Space for their most important meetings and corporate events.
           </p>
           <Link
-            to="/booking"
+            to="/spaces"
             className="inline-block bg-white hover:bg-gray-100 text-[#FF1493] px-8 py-4 rounded-full text-lg font-medium transition-all hover:scale-105"
           >
             Book Your Space Now
