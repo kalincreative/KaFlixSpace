@@ -18,22 +18,22 @@ const images = [
 ]
 
 const gridSpans = [
-  'md:col-span-2 md:row-span-2',
-  'md:col-span-1 md:row-span-1',
-  'md:col-span-1 md:row-span-2',
-  'md:col-span-2 md:row-span-1',
-  'md:col-span-1 md:row-span-1',
-  'md:col-span-1 md:row-span-1',
-  'md:col-span-1 md:row-span-2',
-  'md:col-span-2 md:row-span-1',
-  'md:col-span-1 md:row-span-1',
-  'md:col-span-1 md:row-span-1',
-  'md:col-span-2 md:row-span-2',
-  'md:col-span-1 md:row-span-1',
-  'md:col-span-1 md:row-span-1',
-  'md:col-span-2 md:row-span-1',
-  'md:col-span-2 md:row-span-1',
-  'md:col-span-1 md:row-span-1',
+  'col-span-4 aspect-[19/6]',
+  'col-span-2',
+  'col-span-2',
+  'col-span-4 aspect-[19/6]',
+  'col-span-3 aspect-[19/6]',
+  'col-span-3 aspect-[19/6]',
+  'col-span-2',
+  'col-span-2',
+  'col-span-2',
+  'col-span-4 aspect-[19/6]',
+  'col-span-2',
+  'col-span-2',
+  'col-span-4 aspect-[19/6]',
+  'col-span-2',
+  'col-span-2',
+  'col-span-2',
 ]
 
 export default function Gallery() {
@@ -48,7 +48,7 @@ export default function Gallery() {
 
       <section className="px-4 pb-16">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 auto-rows-[200px] grid-flow-dense">
+          <div className="grid grid-cols-6 gap-4 bg-white">
             {images.map((img, idx) => (
               <div
                 key={idx}
