@@ -23,6 +23,7 @@ export default function Navbar() {
           </Link>
 
           <div className="hidden md:flex items-center gap-6 absolute left-1/2 -translate-x-1/2">
+            <Link to="/track" className="transition-colors">Track Booking</Link>
             <Link to="/spaces" className="transition-colors">Spaces</Link>
             <Link to="/gallery" className="transition-colors">Gallery</Link>
             <Link to="/news" className="transition-colors">News</Link>
@@ -47,6 +48,7 @@ export default function Navbar() {
 
       {mobileMenuOpen && (
         <div className="md:hidden px-4 py-4 space-y-4">
+          <Link to="/track" className="block py-2">Track Booking</Link>
           <Link to="/spaces" className="block py-2">Spaces</Link>
           <Link to="/gallery" className="block py-2">Gallery</Link>
           <Link to="/news" className="block py-2">News</Link>
