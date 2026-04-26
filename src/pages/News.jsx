@@ -34,7 +34,7 @@ const articles = [
 export default function News() {
   return (
     <div className="min-h-screen pt-20 bg-neutral-50">
-      <section className="py-16 bg-neutral-50 border-b border-neutral-200">
+      <section className="py-16 bg-neutral-50">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-neutral-900 mb-4">Latest from KaFlix Space</h1>
           <p className="text-neutral-400 max-w-2xl mx-auto text-lg">
