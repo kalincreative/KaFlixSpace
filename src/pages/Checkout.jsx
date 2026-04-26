@@ -115,18 +115,31 @@ export default function Checkout() {
             <h2 className="text-xl font-semibold text-neutral-900">Booking Summary</h2>
             {cart.map(item => (
               <div key={item.cartId} className="bg-white rounded-xl p-6 border border-neutral-200">
-                <div className="flex justify-between items-start mb-3">
+                <div className="flex justify-between items-start mb-2">
                   <div>
                     <h3 className="font-semibold text-neutral-900">{item.spaceName}</h3>
                     <p className="text-sm text-neutral-500">{item.location}</p>
                   </div>
-                  <span className="font-semibold text-pink-600">RM{item.totalPrice}</span>
+                  <span className="font-bold text-pink-600 text-lg">RM{item.totalPrice}</span>
                 </div>
-                <p className="text-sm text-neutral-600 mb-2">
-                  {item.date} • {item.timeSlot}
+                
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-sm text-neutral-600">{item.date}</span>
+                  <span className="text-neutral-400">•</span>
+                  <span className="text-sm font-medium text-neutral-800">{item.timeRange}</span>
+                </div>
+                <p className="text-xs text-neutral-500 mb-3">
+                  ({item.usageHours} Hour{item.usageHours !== 1 ? 's' : ''} Usage)
                 </p>
+                
+                {item.usageHours && item.prepHours && (
+                  <div className="text-xs text-neutral-500 bg-neutral-50 px-3 py-2 rounded-lg mb-3">
+                    + Complimentary 30m setup & 30m cleanup buffer included
+                  </div>
+                )}
+                
                 {item.addons && item.addons.length > 0 && (
-                  <div className="text-sm text-neutral-500">
+                  <div className="text-sm text-neutral-500 pt-3 border-t border-neutral-100">
                     <span className="font-medium">Add-ons:</span>
                     <ul className="mt-1 ml-2">
                       {item.addons.map((addon, idx) => (
@@ -135,6 +148,11 @@ export default function Checkout() {
                     </ul>
                   </div>
                 )}
+                
+                <div className="flex justify-between items-center pt-3 mt-3 border-t border-neutral-100">
+                  <span className="text-sm text-neutral-600">Total Duration</span>
+                  <span className="text-sm font-medium text-neutral-800">{item.totalBookingHours} hrs</span>
+                </div>
               </div>
             ))}
             <div className="bg-white rounded-xl p-6 border border-neutral-200">
