@@ -61,46 +61,45 @@ export default function RoomsSection() {
               transition={{ duration: 0.4, delay: idx * 0.1 }}
               className="bg-white rounded-2xl border border-neutral-100 shadow-sm hover:shadow-md transition-all overflow-hidden"
             >
-              <div className="aspect-video overflow-hidden">
-                <img
-                  src={space.image}
-                  alt={space.name}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="p-5">
-                <h3 className="text-lg font-bold text-neutral-900">{space.name}</h3>
-                
-                <div className="flex flex-col gap-2 mt-3 text-neutral-500 text-sm">
-                  <div className="flex items-center gap-2">
-                    <Users className="w-4 h-4" />
-                    <span>{space.capacity}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4" />
-                    <span>{space.location}</span>
-                  </div>
+              <Link to="/spaces" className="block">
+                <div className="aspect-video overflow-hidden">
+                  <img
+                    src={space.image}
+                    alt={space.name}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
+                <div className="p-5">
+                  <h3 className="text-lg font-bold text-neutral-900">{space.name}</h3>
+                  
+                  <div className="flex flex-col gap-2 mt-3 text-neutral-500 text-sm">
+                    <div className="flex items-center gap-2">
+                      <Users className="w-4 h-4" />
+                      <span>{space.capacity}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <MapPin className="w-4 h-4" />
+                      <span>{space.location}</span>
+                    </div>
+                  </div>
 
-                <div className="flex justify-between items-center mt-5 pt-4 border-t border-neutral-100">
-                  <div>
-                    <span className="font-bold text-neutral-900">{space.price}</span>
-                    <span className="text-neutral-500 text-sm">/hr</span>
+                  <div className="flex justify-between items-center mt-5 pt-4 border-t border-neutral-100">
+                    <div>
+                      <span className="font-bold text-neutral-900">{space.price}</span>
+                      <span className="text-neutral-500 text-sm">/hr</span>
+                    </div>
+                    <span className="w-8 h-8 rounded-full bg-[#FF1493] text-white flex items-center justify-center">
+                      <ArrowRight className="w-4 h-4" />
+                    </span>
                   </div>
-                  <Link
-                    to="/spaces"
-                    className="w-8 h-8 rounded-full bg-[#FF1493] text-white flex items-center justify-center"
-                  >
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
                 </div>
-              </div>
+              </Link>
             </motion.div>
           ))}
         </div>
 
         <div className="text-center mt-8 md:hidden">
-          <Link to="/booking" className="text-[#FF1493] text-sm font-medium hover:underline">
+          <Link to="/spaces" className="text-[#FF1493] text-sm font-medium hover:underline">
             View all spaces →
           </Link>
         </div>
