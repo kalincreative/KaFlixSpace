@@ -85,6 +85,7 @@ export default function AdminDashboard() {
     const updated = { ...spaces, [spaceId]: !spaces[spaceId] }
     setSpaces(updated)
     localStorage.setItem('kaflix_spaces_maintenance', JSON.stringify(updated))
+    window.dispatchEvent(new Event('kaflix_spaces_updated'))
   }
 
   const getRevenueByMonth = () => {

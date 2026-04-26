@@ -1,7 +1,9 @@
 import { useParams, Link } from 'react-router-dom'
-import { useState } from 'react'
-import { Users, MapPin, Monitor, Wifi, PenTool, Volume2, Coffee, Plus, ShoppingCart, AlertCircle } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { Users, MapPin, Monitor, Wifi, PenTool, Volume2, Coffee, Plus, ShoppingCart, AlertCircle, Wrench } from 'lucide-react'
 import { useReservation } from '../context/ReservationContext'
+
+const MAINTENANCE_KEY = 'kaflix_spaces_maintenance'
 
 const spaces = [
   { id: 1, name: 'Grand Seminar Hall', capacity: 120, price: 'RM150', image: '/Spaces/Grand Seminar Hall.png', location: 'Level 3, Tower A', description: 'Our flagship Grand Seminar Hall is an expansive, architecturally stunning venue designed for large-scale conferences, keynote presentations, and corporate events. Featuring a 200-inch 4K projection wall, professional-grade acoustics, and seating for up to 120 guests, this space sets the stage for unforgettable moments. The floor-to-ceiling glass windows flood the room with natural light, while the dark wood paneling and premium carpet create an atmosphere of sophistication and focus.' },
@@ -37,6 +39,41 @@ export default function VenueDetails() {
   const [addonQuantities, setAddonQuantities] = useState({})
   const [formData, setFormData] = useState({ date: '', timeSlot: '', name: '', email: '' })
   const [errors, setErrors] = useState({})
+  const [maintenanceSpaces, setMaintenanceSpaces] = useState({})
+
+  useEffect(() => {
+    const stored = localStorage.getItem(MAINTENANCE_KEY)
+    if (stored) setMaintenanceSpaces(JSON.parse(stored))
+    
+    const handleUpdate = () => {
+      const stored = localStorage.getItem(MAINTENANCE_KEY)
+      setMaintenanceSpaces(stored ? JSON.parse(stored) : {})
+    }
+    window.addEventListener('kaflix_spaces_updated', handleUpdate)
+    return () => window.removeEventListener('kaflix_spaces_updated', handleUpdate)
+  }, [])
+
+  if (!space || maintenanceSpaces[space.id]) {
+    return (
+      <div className="min-h-screen pt-20 flex items-center justify-center bg-neutral-50">
+        <div className="text-center bg-white rounded-2xl shadow-xl p-12 max-w-md mx-4">
+          <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Wrench className="w-10 h-10 text-red-500" />
+          </div>
+          <h2 className="text-2xl font-bold text-neutral-900 mb-2">Space Under Maintenance</h2>
+          <p className="text-neutral-600 mb-6">
+            This space is currently unavailable. Please check back later or browse other spaces.
+          </p>
+          <Link
+            to="/spaces"
+            className="inline-block px-6 py-3 bg-[#FF1493] text-white rounded-lg hover:opacity-90 transition-colors"
+          >
+            Browse Spaces
+          </Link>
+        </div>
+      </div>
+    )
+  }
 
   const basePrice = space ? parseInt(space.price.replace('RM', '')) : 0
   const addonsTotal = Object.entries(addonQuantities).reduce((sum, [addonId, qty]) => {

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Search, Users, MapPin, ArrowRight, ChevronDown } from 'lucide-react'
 
@@ -22,11 +22,31 @@ const capacityFilters = [
   { label: 'Large (40+)', value: 'large' },
 ]
 
+const MAINTENANCE_KEY = 'kaflix_spaces_maintenance'
+
 export default function SpacesPage() {
   const [search, setSearch] = useState('')
   const [capacityFilter, setCapacityFilter] = useState('all')
+  const [maintenanceSpaces, setMaintenanceSpaces] = useState(() => {
+    const stored = localStorage.getItem(MAINTENANCE_KEY)
+    return stored ? JSON.parse(stored) : {}
+  })
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const stored = localStorage.getItem(MAINTENANCE_KEY)
+      setMaintenanceSpaces(stored ? JSON.parse(stored) : {})
+    }
+    window.addEventListener('storage', handleStorageChange)
+    window.addEventListener('kaflix_spaces_updated', handleStorageChange)
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+      window.removeEventListener('kaflix_spaces_updated', handleStorageChange)
+    }
+  }, [])
 
   const filteredSpaces = spaces.filter(space => {
+    if (maintenanceSpaces[space.id]) return false
     const matchesSearch = space.name.toLowerCase().includes(search.toLowerCase())
     const matchesCapacity = capacityFilter === 'all' || 
       (capacityFilter === 'small' && space.capacity < 10) ||
