@@ -47,15 +47,19 @@ export default function Checkout() {
         client_name: bookingData.clientName,
       }
       
-      await emailjs.send(
+      console.log('Sending email with params:', templateParams)
+      
+      const response = await emailjs.send(
         EMAILJS_SERVICE_ID,
         EMAILJS_TEMPLATE_ID,
         templateParams,
         EMAILJS_PUBLIC_KEY
       )
-      console.log('Confirmation email sent successfully')
+      console.log('Email sent successfully:', response.status, response.text)
     } catch (error) {
-      console.warn('EmailJS error (non-blocking):', error?.text || error?.message || error)
+      console.error('EmailJS error:', error)
+      console.error('Error text:', error?.text)
+      console.error('Error status:', error?.status)
     }
   }
 
