@@ -1110,51 +1110,51 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            {/* Booking Details Popup */}
+            {/* Booking Details Modal */}
             {selectedDate && (
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-100">
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <h3 className="text-lg font-semibold text-neutral-900">
-                      Bookings on {selectedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
-                    </h3>
-                    <p className="text-sm text-neutral-500">
-                      {getBookingsForDate(selectedDate).filter(b => calendarStatusFilter === 'all' || b.status === calendarStatusFilter).length} booking(s)
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => setSelectedDate(null)}
-                    className="p-2 hover:bg-neutral-100 rounded-lg transition-colors"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
-
-                <div className="space-y-3">
-                  {getBookingsForDate(selectedDate)
-                    .filter(b => calendarStatusFilter === 'all' || b.status === calendarStatusFilter)
-                    .map(booking => (
-                      <div key={booking.id} className="flex items-center gap-4 p-4 rounded-xl bg-neutral-50">
-                        <div className={`w-2 h-2 rounded-full ${
-                          booking.status === 'approved' ? 'bg-green-500' :
-                          booking.status === 'rejected' ? 'bg-red-500' : 'bg-yellow-500'
-                        }`} />
-                        <div className="flex-1">
-                          <p className="font-medium text-neutral-900">{booking.client_name}</p>
-                          <p className="text-sm text-neutral-500">{booking.space_name}</p>
-                          <p className="text-sm text-neutral-400">{booking.time_range}</p>
-                        </div>
-                        <div className="text-right">
-                          <p className="font-medium text-neutral-900">RM {booking.total_price}</p>
-                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                            booking.status === 'approved' ? 'bg-green-100 text-green-700' :
-                            booking.status === 'rejected' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'
-                          }`}>
-                            {booking.status}
-                          </span>
-                        </div>
+              <div>
+                {/* Backdrop */}
+                <div className="fixed inset-0 bg-black/50 z-40" onClick={() => setSelectedDate(null)} />
+                
+                {/* Modal */}
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none">
+                  <div className="bg-white rounded-2xl p-6 shadow-xl w-full max-w-md max-h-[80vh] overflow-y-auto pointer-events-auto">
+                    <div className="flex items-center justify-between mb-4">
+                      <div>
+                        <h3 className="text-lg font-semibold text-neutral-900">
+                          {selectedDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                        </h3>
+                        <p className="text-sm text-neutral-500">
+                          {getBookingsForDate(selectedDate).filter(b => calendarStatusFilter === 'all' || b.status === calendarStatusFilter).length} booking(s)
+                        </p>
                       </div>
-                    ))}
+                      <button onClick={() => setSelectedDate(null)} className="p-2 hover:bg-neutral-100 rounded-lg">
+                        <X className="w-5 h-5" />
+                      </button>
+                    </div>
+                    <div className="space-y-3">
+                      {getBookingsForDate(selectedDate).filter(b => calendarStatusFilter === 'all' || b.status === calendarStatusFilter).map(booking => (
+                        <div key={booking.id} className="flex items-center gap-4 p-4 rounded-xl bg-neutral-50">
+                          <div className={`w-2 h-2 rounded-full ${
+                            booking.status === 'approved' ? 'bg-green-500' : booking.status === 'rejected' ? 'bg-red-500' : 'bg-yellow-500'
+                          }`} />
+                          <div className="flex-1">
+                            <p className="font-medium text-neutral-900">{booking.client_name}</p>
+                            <p className="text-sm text-neutral-500">{booking.space_name}</p>
+                            <p className="text-sm text-neutral-400">{booking.time_range}</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="font-medium text-neutral-900">RM {booking.total_price}</p>
+                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                              booking.status === 'approved' ? 'bg-green-100 text-green-700' : booking.status === 'rejected' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'
+                            }`}>
+                              {booking.status}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
