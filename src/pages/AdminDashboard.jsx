@@ -40,6 +40,7 @@ export default function AdminDashboard() {
   const [currentMonth, setCurrentMonth] = useState(new Date())
   const [statusFilter, setStatusFilter] = useState('all')
   const [clientSearch, setClientSearch] = useState('')
+  const [spaceSearch, setSpaceSearch] = useState('')
   const [clientPage, setClientPage] = useState(1)
   
   const CLIENTS_PER_PAGE = 10
@@ -1164,6 +1165,103 @@ export default function AdminDashboard() {
                     </div>
                   </div>
                 </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeLink === 'spaces' && (
+          <div className="space-y-6">
+            {/* Search and Filter */}
+            <div className="bg-white rounded-xl p-4 shadow-sm border border-neutral-100">
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
+                  <input
+                    type="text"
+                    placeholder="Search spaces..."
+                    value={spaceSearch}
+                    onChange={(e) => setSpaceSearch(e.target.value)}
+                    className="w-full pl-10 pr-4 py-2.5 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500"
+                  />
+                </div>
+                <select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                  className="px-4 py-2.5 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-500/20"
+                >
+                  <option value="all">All Status</option>
+                  <option value="available">Available</option>
+                  <option value="booked">Booked Today</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Spaces Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {adminSpaces.filter(space => {
+                const searchMatch = space.name.toLowerCase().includes(spaceSearch.toLowerCase())
+                if (statusFilter === 'all') return searchMatch
+                
+                const todayBookings = bookings.filter(b => 
+                  b.space_name === space.name && 
+                  b.status === 'approved' &&
+                  b.booking_date === new Date().toISOString().split('T')[0]
+                )
+                
+                if (statusFilter === 'available') return searchMatch && todayBookings.length === 0
+                if (statusFilter === 'booked') return searchMatch && todayBookings.length > 0
+                return searchMatch
+              }).map(space => {
+                const spaceBookings = bookings.filter(b => b.space_name === space.name && b.status === 'approved')
+                const revenue = spaceBookings.reduce((sum, b) => sum + parseFloat(b.total_price || 0), 0)
+                const todayBookings = bookings.filter(b => 
+                  b.space_name === space.name && 
+                  b.status === 'approved' &&
+                  b.booking_date === new Date().toISOString().split('T')[0]
+                )
+                const isBookedToday = todayBookings.length > 0
+                
+                return (
+                  <div key={space.id} className="bg-white rounded-xl p-5 shadow-sm border border-neutral-100 hover:shadow-md transition-shadow">
+                    <div className="flex items-start justify-between mb-3">
+                      <div>
+                        <h3 className="font-semibold text-neutral-900">{space.name}</h3>
+                        <p className="text-sm text-neutral-500">{space.capacity} pax</p>
+                      </div>
+                      <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${
+                        isBookedToday 
+                          ? 'bg-yellow-100 text-yellow-700' 
+                          : 'bg-green-100 text-green-700'
+                      }`}>
+                        {isBookedToday ? 'Booked' : 'Available'}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2 pt-3 border-t border-neutral-100">
+                      <div>
+                        <p className="text-xs text-neutral-500">Total Bookings</p>
+                        <p className="font-semibold text-neutral-900">{spaceBookings.length}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-neutral-500">Revenue</p>
+                        <p className="font-semibold text-neutral-900">RM{revenue.toLocaleString()}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-neutral-500">Price/hr</p>
+                        <p className="font-semibold text-neutral-900">{space.price}</p>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+
+            {adminSpaces.filter(space => 
+              space.name.toLowerCase().includes(spaceSearch.toLowerCase())
+            ).length === 0 && (
+              <div className="bg-white rounded-xl p-12 text-center">
+                <Home className="w-12 h-12 text-neutral-300 mx-auto mb-3" />
+                <p className="text-neutral-600">No spaces found</p>
               </div>
             )}
           </div>
