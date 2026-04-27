@@ -1252,7 +1252,7 @@ export default function AdminDashboard() {
                     <tbody className="divide-y divide-neutral-100">
                       {clients
                         .filter(c => !clientSearch || 
-                          c.name?.toLowerCase().includes(clientSearch.toLowerCase()) ||
+                          (c.full_name || c.name)?.toLowerCase().includes(clientSearch.toLowerCase()) ||
                           c.email?.toLowerCase().includes(clientSearch.toLowerCase()))
                         .slice((clientPage - 1) * CLIENTS_PER_PAGE, clientPage * CLIENTS_PER_PAGE)
                         .map((client) => (
@@ -1261,10 +1261,10 @@ export default function AdminDashboard() {
                             <div className="flex items-center gap-3">
                               <div className="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center shrink-0">
                                 <span className="text-pink-600 font-semibold text-sm">
-                                  {(client.name || client.client_name || '?').charAt(0).toUpperCase()}
+                                  {(client.full_name || client.name || '?').charAt(0).toUpperCase()}
                                 </span>
                               </div>
-                              <span className="text-sm font-medium text-neutral-900">{client.name || client.client_name}</span>
+                              <span className="text-sm font-medium text-neutral-900">{client.full_name || client.name}</span>
                             </div>
                           </td>
                           <td className="px-6 py-4 text-sm text-neutral-600">{client.email}</td>
@@ -1286,7 +1286,7 @@ export default function AdminDashboard() {
                 {/* Pagination */}
                 {(() => {
                   const filteredClients = clients.filter(c => !clientSearch || 
-                    c.name?.toLowerCase().includes(clientSearch.toLowerCase()) ||
+                    (c.full_name || c.name)?.toLowerCase().includes(clientSearch.toLowerCase()) ||
                     c.email?.toLowerCase().includes(clientSearch.toLowerCase()))
                   const totalPages = Math.ceil(filteredClients.length / CLIENTS_PER_PAGE)
                   
