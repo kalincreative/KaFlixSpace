@@ -37,29 +37,27 @@ export default function Checkout() {
 
   const sendConfirmationEmail = async (bookingData) => {
     try {
-      const templateParams = {
+      // Clean params - only what's in template
+      const params = {
         client_name: bookingData.clientName,
         space_name: bookingData.spaceName,
         booking_date: bookingData.date,
         time_slot: bookingData.timeRange,
-        to_email: bookingData.clientEmail,
       }
       
-      // Try using sendForm with a form element
-      const form = document.createElement('form')
-      form.innerHTML = `
-        <input name="client_name" value="${bookingData.clientName}" />
-        <input name="space_name" value="${bookingData.spaceName}" />
-        <input name="booking_date" value="${bookingData.date}" />
-        <input name="time_slot" value="${bookingData.timeRange}" />
-        <input name="to_email" value="${bookingData.clientEmail}" />
-      `
+      console.log('EmailJS sending with:', params)
+      console.log('Recipient:', bookingData.clientEmail)
+      console.log('Service:', EMAILJS_SERVICE_ID, 'Template:', EMAILJS_TEMPLATE_ID, 'Key:', EMAILJS_PUBLIC_KEY)
       
-      emailjs.init(EMAILJS_PUBLIC_KEY)
-      const response = await emailjs.sendForm(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, form)
-      console.log('Email sent:', response.status)
+      // Try pure send without extra params first
+      const response = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, params)
+      
+      if (response.status === 200) {
+        console.log('Email sent successfully!')
+      }
     } catch (error) {
       console.error('EmailJS error:', error)
+      // Fallback: just log but don't fail the booking
     }
   }
 
