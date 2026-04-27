@@ -36,6 +36,7 @@ export default function Checkout() {
     try {
       await fetch(APPS_SCRIPT_URL, {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           client_name: bookingData.clientName,
           client_email: bookingData.clientEmail,
