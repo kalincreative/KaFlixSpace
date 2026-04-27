@@ -1,5 +1,5 @@
 // Google Apps Script - Email Service
-// Deploy as Web App and use the URL below
+// Deploy as Web App
 
 function doGet(e) {
   return handleRequest(e)
@@ -10,24 +10,39 @@ function doPost(e) {
 }
 
 function handleRequest(e) {
-  // Handle both POST and GET (for redirect workaround)
-  let data = e.parameter
-  if (e.postData) {
+  // Parse data from POST body or query params
+  let data = {}
+  
+  if (e.parameter && Object.keys(e.parameter).length > 0) {
+    // GET params or FormData
+    data = e.parameter
+  } else if (e.postData) {
     try {
       data = JSON.parse(e.postData.contents)
     } catch (err) {
-      data = e.parameter
+      // Try parsing as string
+      const str = e.postData.contents
+      str.split('&').forEach(part => {
+        const [key, val] = part.split('=')
+        if (key) data[decodeURIComponent(key)] = decodeURIComponent(val || '')
+      })
     }
   }
   
+  const clientName = data.client_name || 'Customer'
+  const clientEmail = data.client_email || ''
+  const spaceName = data.space_name || 'Booking'
+  const bookingDate = data.booking_date || ''
+  const timeSlot = data.time_slot || ''
+  
   // Email to Client - Confirmation
-  const clientSubject = `Booking Confirmed: ${data.space_name}`
-  const clientBody = `Hi ${data.client_name},
+  if (clientEmail) {
+    const clientBody = `Hi ${clientName},
 
-Congratulations! Your reservation for ${data.space_name} has been successfully received.
+Congratulations! Your reservation for ${spaceName} has been successfully received.
 
-Date: ${data.booking_date}
-Time: ${data.time_slot}
+Date: ${bookingDate}
+Time: ${timeSlot}
 Location: KaFlix Space, Kuala Lumpur
 
 Note: Please arrive 30 minutes early for check-in.
@@ -37,29 +52,20 @@ Thank you for choosing KaFlix Space!
 Best regards,
 KaFlix Space Team`
 
-  try {
     MailApp.sendEmail({
-      to: data.client_email,
-      subject: clientSubject,
+      to: clientEmail,
+      subject: `Booking Confirmed: ${spaceName}`,
       body: clientBody,
       name: 'KaFlix Space'
     })
-  } catch (err) {
-    Logger.log('Client email error: ' + err)
   }
   
   // Also notify ADMIN
-  try {
-    MailApp.sendEmail({
-      to: 'kalincreativee@gmail.com',
-      subject: `New Booking: ${data.space_name}`,
-      body: `Client: ${data.client_name}\nEmail: ${data.client_email}\nSpace: ${data.space_name}\nDate: ${data.booking_date}\nTime: ${data.time_slot}`
-    })
-  } catch (err) {
-    Logger.log('Admin email error: ' + err)
-  }
+  MailApp.sendEmail({
+    to: 'kalincreativee@gmail.com',
+    subject: `New Booking: ${spaceName}`,
+    body: `New Booking Received!\n\nClient: ${clientName}\nEmail: ${clientEmail}\nSpace: ${spaceName}\nDate: ${bookingDate}\nTime: ${timeSlot}`
+  })
   
-  // Return with CORS headers
-  return ContentService.createTextOutput(JSON.stringify({ success: true }))
-    .setMimeType(ContentService.MimeType.JSON)
+  return ContentService.createTextOutput('OK').setMimeType(ContentService.MimeType.TEXT)
 }

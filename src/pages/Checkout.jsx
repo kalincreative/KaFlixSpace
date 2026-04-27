@@ -34,18 +34,20 @@ export default function Checkout() {
 
   const sendConfirmationEmail = async (bookingData) => {
     try {
-      // Use GET with query params to avoid CORS
-      const params = new URLSearchParams({
-        client_name: bookingData.clientName,
-        client_email: bookingData.clientEmail,
-        space_name: bookingData.spaceName,
-        booking_date: bookingData.date,
-        time_slot: bookingData.timeRange,
-      })
+      // Use FormData to send data (works better with no-cors)
+      const formData = new FormData()
+      formData.append('client_name', bookingData.clientName)
+      formData.append('client_email', bookingData.clientEmail)
+      formData.append('space_name', bookingData.spaceName)
+      formData.append('booking_date', bookingData.date)
+      formData.append('time_slot', bookingData.timeRange)
       
-      // no-cors means request is sent but we can't see response
-      fetch(`${APPS_SCRIPT_URL}?${params}`, { mode: 'no-cors' })
-        .then(() => console.log('Email notification sent (no-cors)'))
+      fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        body: formData,
+        mode: 'no-cors'
+      })
+        .then(() => console.log('Email sent (no-cors)'))
         .catch(err => console.log('Email fetch error:', err))
     } catch (error) {
       console.error('Email error:', error)
