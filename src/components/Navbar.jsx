@@ -14,6 +14,8 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  const closeMobileMenu = () => setMobileMenuOpen(false)
+
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white/90 backdrop-blur-md shadow-sm' : 'bg-transparent'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -47,13 +49,13 @@ export default function Navbar() {
       </div>
 
       {mobileMenuOpen && (
-        <div className="md:hidden px-4 py-4 space-y-4">
-          <Link to="/track" className="block py-2">Track Booking</Link>
-          <Link to="/spaces" className="block py-2">Spaces</Link>
-          <Link to="/gallery" className="block py-2">Gallery</Link>
-          <Link to="/news" className="block py-2">News</Link>
-          <Link to="/contact" className="block py-2">Contact</Link>
-          <Link to="/spaces" className="block py-2 text-[#FF1493] font-medium">Book Now</Link>
+        <div className="md:hidden px-4 py-4 space-y-4 bg-white">
+          <Link to="/track" onClick={closeMobileMenu} className="block py-2">Track Booking</Link>
+          <Link to="/spaces" onClick={closeMobileMenu} className="block py-2">Spaces</Link>
+          <Link to="/gallery" onClick={closeMobileMenu} className="block py-2">Gallery</Link>
+          <Link to="/news" onClick={closeMobileMenu} className="block py-2">News</Link>
+          <Link to="/contact" onClick={closeMobileMenu} className="block py-2">Contact</Link>
+          <Link to="/spaces" onClick={closeMobileMenu} className="block py-2 text-[#FF1493] font-medium">Book Now</Link>
         </div>
       )}
     </nav>
