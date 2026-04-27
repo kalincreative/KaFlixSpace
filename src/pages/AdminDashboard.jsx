@@ -40,6 +40,9 @@ export default function AdminDashboard() {
   const [currentMonth, setCurrentMonth] = useState(new Date())
   const [statusFilter, setStatusFilter] = useState('all')
   const [clientSearch, setClientSearch] = useState('')
+  const [clientPage, setClientPage] = useState(1)
+  
+  const CLIENTS_PER_PAGE = 10
   const [spaces, setSpaces] = useState(() => {
     const stored = localStorage.getItem('kaflix_spaces_maintenance')
     return stored ? JSON.parse(stored) : {}
@@ -193,6 +196,11 @@ export default function AdminDashboard() {
   useEffect(() => {
     setCurrentPage(1)
   }, [searchQuery, statusFilter, dateFrom, dateTo])
+
+  // Reset client page when search changes
+  useEffect(() => {
+    setClientPage(1)
+  }, [clientSearch])
 
   const toggleDropdown = (dropdown) => {
     setOpenDropdowns(prev => ({ ...prev, [dropdown]: !prev[dropdown] }))
@@ -1245,6 +1253,7 @@ export default function AdminDashboard() {
                         .filter(c => !clientSearch || 
                           c.name?.toLowerCase().includes(clientSearch.toLowerCase()) ||
                           c.email?.toLowerCase().includes(clientSearch.toLowerCase()))
+                        .slice((clientPage - 1) * CLIENTS_PER_PAGE, clientPage * CLIENTS_PER_PAGE)
                         .map((client) => (
                         <tr key={client.id} className="hover:bg-neutral-50 transition-colors">
                           <td className="px-6 py-4">
@@ -1272,6 +1281,42 @@ export default function AdminDashboard() {
                     </tbody>
                   </table>
                 </div>
+
+                {/* Pagination */}
+                {clients.filter(c => !clientSearch || c.name?.toLowerCase().includes(clientSearch.toLowerCase()) || c.email?.toLowerCase().includes(clientSearch.toLowerCase())).length > CLIENTS_PER_PAGE && (
+                  <div className="px-6 py-4 border-t border-neutral-100 flex items-center justify-between">
+                    <p className="text-sm text-neutral-500">
+                      Showing {(clientPage - 1) * CLIENTS_PER_PAGE + 1} to {Math.min(clientPage * CLIENTS_PER_PAGE, clients.filter(c => !clientSearch || c.name?.toLowerCase().includes(clientSearch.toLowerCase()) || c.email?.toLowerCase().includes(clientSearch.toLowerCase())).length)} of {clients.filter(c => !clientSearch || c.name?.toLowerCase().includes(clientSearch.toLowerCase()) || c.email?.toLowerCase().includes(clientSearch.toLowerCase())).length}
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => setClientPage(p => Math.max(1, p - 1))}
+                        disabled={clientPage === 1}
+                        className="p-2 rounded-lg border border-neutral-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-neutral-50"
+                      >
+                        <ChevronLeft className="w-4 h-4" />
+                      </button>
+                      {Array.from({ length: Math.ceil(clients.filter(c => !clientSearch || c.name?.toLowerCase().includes(clientSearch.toLowerCase()) || c.email?.toLowerCase().includes(clientSearch.toLowerCase())).length / CLIENTS_PER_PAGE) }, (_, i) => i + 1).map(page => (
+                        <button
+                          key={page}
+                          onClick={() => setClientPage(page)}
+                          className={`w-8 h-8 rounded-lg text-sm font-medium ${
+                            clientPage === page ? 'bg-pink-500 text-white' : 'text-neutral-600 hover:bg-neutral-100'
+                          }`}
+                        >
+                          {page}
+                        </button>
+                      ))}
+                      <button
+                        onClick={() => setClientPage(p => Math.min(Math.ceil(clients.filter(c => !clientSearch || c.name?.toLowerCase().includes(clientSearch.toLowerCase()) || c.email?.toLowerCase().includes(clientSearch.toLowerCase())).length / CLIENTS_PER_PAGE), p + 1))}
+                        disabled={clientPage >= Math.ceil(clients.filter(c => !clientSearch || c.name?.toLowerCase().includes(clientSearch.toLowerCase()) || c.email?.toLowerCase().includes(clientSearch.toLowerCase())).length / CLIENTS_PER_PAGE)}
+                        className="p-2 rounded-lg border border-neutral-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-neutral-50"
+                      >
+                        <ChevronRight className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                )}
               </>
             )}
           </div>
