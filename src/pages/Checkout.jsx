@@ -1,13 +1,10 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Check, CreditCard, Building, CheckCircle, Loader2 } from 'lucide-react'
-import emailjs from '@emailjs/browser'
 import { useReservation } from '../context/ReservationContext'
 import { createBooking, createOrUpdateClient } from '../lib/supabase'
 
-const EMAILJS_SERVICE_ID = 'service_736nhhr'
-const EMAILJS_TEMPLATE_ID = 'template_hor7sba'
-const EMAILJS_PUBLIC_KEY = '6Fn0DNkn3OKRxmeb8'
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby6SX_2gHD4h9YDC93K63NJ7GFDp4RuiphjrCDuzGxS5gWyG2KtJw_HOc3g6FLA6gUYyw/exec'
 
 export default function Checkout() {
   const navigate = useNavigate()
@@ -37,22 +34,19 @@ export default function Checkout() {
 
   const sendConfirmationEmail = async (bookingData) => {
     try {
-      const params = {
-        client_name: bookingData.clientName,
-        space_name: bookingData.spaceName,
-        booking_date: bookingData.date,
-        time_slot: bookingData.timeRange,
-      }
-      
-      const response = await emailjs.send(
-        EMAILJS_SERVICE_ID, 
-        EMAILJS_TEMPLATE_ID, 
-        params,
-        EMAILJS_PUBLIC_KEY
-      )
-      console.log('Email sent:', response.status)
+      await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({
+          client_name: bookingData.clientName,
+          client_email: bookingData.clientEmail,
+          space_name: bookingData.spaceName,
+          booking_date: bookingData.date,
+          time_slot: bookingData.timeRange,
+        })
+      })
+      console.log('Email notification sent')
     } catch (error) {
-      console.error('EmailJS error:', error)
+      console.error('Email error:', error)
     }
   }
 
