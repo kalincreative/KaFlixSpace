@@ -37,7 +37,6 @@ export default function Checkout() {
 
   const sendConfirmationEmail = async (bookingData) => {
     try {
-      // Clean params - only what's in template
       const params = {
         client_name: bookingData.clientName,
         space_name: bookingData.spaceName,
@@ -45,19 +44,10 @@ export default function Checkout() {
         time_slot: bookingData.timeRange,
       }
       
-      console.log('EmailJS sending with:', params)
-      console.log('Recipient:', bookingData.clientEmail)
-      console.log('Service:', EMAILJS_SERVICE_ID, 'Template:', EMAILJS_TEMPLATE_ID, 'Key:', EMAILJS_PUBLIC_KEY)
-      
-      // Try pure send without extra params first
       const response = await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, params)
-      
-      if (response.status === 200) {
-        console.log('Email sent successfully!')
-      }
+      console.log('Email sent:', response.status)
     } catch (error) {
       console.error('EmailJS error:', error)
-      // Fallback: just log but don't fail the booking
     }
   }
 
