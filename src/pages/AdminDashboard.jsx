@@ -71,6 +71,9 @@ export default function AdminDashboard() {
   // Mobile sidebar state
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
+  // Revenue chart filter
+  const [chartView, setChartView] = useState('monthly')
+
   useEffect(() => {
     fetchBookings()
     fetchClients()
@@ -106,9 +109,9 @@ export default function AdminDashboard() {
   }
 
   const getRevenueByMonth = () => {
-    const last5Months = []
+    const last6Months = []
     const today = new Date()
-    for (let i = 4; i >= 0; i--) {
+    for (let i = 5; i >= 0; i--) {
       const date = new Date(today.getFullYear(), today.getMonth() - i, 1)
       const month = date.toLocaleDateString('en-US', { month: 'short' })
       const year = date.getFullYear()
@@ -118,9 +121,38 @@ export default function AdminDashboard() {
         .filter(b => b.status === 'approved' && b.booking_date?.startsWith(monthKey))
         .reduce((sum, b) => sum + parseFloat(b.total_price || 0), 0)
       
-      last5Months.push({ month, revenue })
+      last6Months.push({ month, revenue })
     }
-    return last5Months
+    return last6Months
+  }
+
+  const getRevenueByWeek = () => {
+    const last6Weeks = []
+    const today = new Date()
+    
+    for (let i = 5; i >= 0; i--) {
+      const weekStart = new Date(today)
+      weekStart.setDate(today.getDate() - (i * 7) - today.getDay())
+      const weekEnd = new Date(weekStart)
+      weekEnd.setDate(weekStart.getDate() + 6)
+      
+      const weekLabel = `W${6 - i}`
+      
+      const revenue = bookings
+        .filter(b => {
+          if (b.status !== 'approved' || !b.booking_date) return false
+          const bDate = new Date(b.booking_date.split('T')[0])
+          return bDate >= weekStart && bDate <= weekEnd
+        })
+        .reduce((sum, b) => sum + parseFloat(b.total_price || 0), 0)
+      
+      last6Weeks.push({ month: weekLabel, revenue })
+    }
+    return last6Weeks
+  }
+
+  const getRevenueData = () => {
+    return chartView === 'weekly' ? getRevenueByWeek() : getRevenueByMonth()
   }
 
   const approvedBookings = useMemo(() => {
@@ -547,18 +579,38 @@ export default function AdminDashboard() {
                 <div className="flex items-center justify-between mb-6">
                   <div>
                     <h3 className="text-lg font-semibold text-neutral-900">Revenue Overview</h3>
-                    <p className="text-sm text-neutral-500">Last 6 months performance</p>
+                    <p className="text-sm text-neutral-500">
+                      {chartView === 'weekly' ? 'Last 6 weeks performance' : 'Last 6 months performance'}
+                    </p>
                   </div>
                   <div className="flex gap-2">
-                    <button className="px-3 py-1.5 text-sm bg-pink-50 text-pink-600 rounded-lg font-medium">Monthly</button>
-                    <button className="px-3 py-1.5 text-sm text-neutral-500 hover:bg-neutral-50 rounded-lg">Weekly</button>
+                    <button 
+                      onClick={() => setChartView('monthly')}
+                      className={`px-3 py-1.5 text-sm rounded-lg font-medium transition-colors ${
+                        chartView === 'monthly' 
+                          ? 'bg-pink-50 text-pink-600' 
+                          : 'text-neutral-500 hover:bg-neutral-50'
+                      }`}
+                    >
+                      Monthly
+                    </button>
+                    <button 
+                      onClick={() => setChartView('weekly')}
+                      className={`px-3 py-1.5 text-sm rounded-lg font-medium transition-colors ${
+                        chartView === 'weekly' 
+                          ? 'bg-pink-50 text-pink-600' 
+                          : 'text-neutral-500 hover:bg-neutral-50'
+                      }`}
+                    >
+                      Weekly
+                    </button>
                   </div>
                 </div>
                 
                 {/* Simple Bar Chart */}
                 <div className="flex items-end justify-between h-48 gap-4">
-                  {getRevenueByMonth().map((item, idx) => {
-                    const maxRevenue = Math.max(...getRevenueByMonth().map(m => m.revenue), 1)
+                  {getRevenueData().map((item, idx) => {
+                    const maxRevenue = Math.max(...getRevenueData().map(m => m.revenue), 1)
                     const height = item.revenue > 0 ? (item.revenue / maxRevenue) * 100 : 5
                     return (
                       <div key={idx} className="flex-1 flex flex-col items-center gap-2">
