@@ -15,7 +15,7 @@ export default function HeroSection() {
       </div>
 
       {/* Layer 2: Typography */}
-      <div className="absolute z-10 inset-0 flex flex-col items-center justify-start pt-12 md:pt-16">
+      <div className="absolute z-10 inset-0 flex flex-col items-center justify-start pt-18 md:pt-24">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
