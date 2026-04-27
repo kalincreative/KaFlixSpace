@@ -1225,7 +1225,7 @@ export default function AdminDashboard() {
             ) : (
               <>
                 {/* Client Search */}
-                <div className="p-4 border-b border-neutral-100">
+                <div className="p-4 border-b border-neutral-100 flex items-center justify-between">
                   <div className="relative max-w-md">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
                     <input
@@ -1236,6 +1236,7 @@ export default function AdminDashboard() {
                       className="w-full pl-10 pr-4 py-2.5 border border-neutral-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-pink-500/20 focus:border-pink-500"
                     />
                   </div>
+                  <p className="text-sm text-neutral-500">{clients.length} client(s)</p>
                 </div>
                 <div className="overflow-x-auto">
                   <table className="w-full">
@@ -1258,8 +1259,8 @@ export default function AdminDashboard() {
                         <tr key={client.id} className="hover:bg-neutral-50 transition-colors">
                           <td className="px-6 py-4">
                             <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center">
-                                <span className="text-pink-600 font-semibold">
+                              <div className="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center shrink-0">
+                                <span className="text-pink-600 font-semibold text-sm">
                                   {client.name?.charAt(0)?.toUpperCase() || '?'}
                                 </span>
                               </div>
@@ -1269,7 +1270,7 @@ export default function AdminDashboard() {
                           <td className="px-6 py-4 text-sm text-neutral-600">{client.email}</td>
                           <td className="px-6 py-4 text-sm text-neutral-600">{client.phone || '-'}</td>
                           <td className="px-6 py-4 text-sm font-medium text-neutral-900">
-                            RM {parseFloat(client.total_spent || 0).toLocaleString()}
+                            {client.total_spent ? `RM ${parseFloat(client.total_spent).toLocaleString()}` : 'RM 0'}
                           </td>
                           <td className="px-6 py-4">
                             <span className="px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
@@ -1283,40 +1284,35 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* Pagination */}
-                {clients.filter(c => !clientSearch || c.name?.toLowerCase().includes(clientSearch.toLowerCase()) || c.email?.toLowerCase().includes(clientSearch.toLowerCase())).length > CLIENTS_PER_PAGE && (
-                  <div className="px-6 py-4 border-t border-neutral-100 flex items-center justify-between">
-                    <p className="text-sm text-neutral-500">
-                      Showing {(clientPage - 1) * CLIENTS_PER_PAGE + 1} to {Math.min(clientPage * CLIENTS_PER_PAGE, clients.filter(c => !clientSearch || c.name?.toLowerCase().includes(clientSearch.toLowerCase()) || c.email?.toLowerCase().includes(clientSearch.toLowerCase())).length)} of {clients.filter(c => !clientSearch || c.name?.toLowerCase().includes(clientSearch.toLowerCase()) || c.email?.toLowerCase().includes(clientSearch.toLowerCase())).length}
-                    </p>
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => setClientPage(p => Math.max(1, p - 1))}
-                        disabled={clientPage === 1}
-                        className="p-2 rounded-lg border border-neutral-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-neutral-50"
-                      >
-                        <ChevronLeft className="w-4 h-4" />
-                      </button>
-                      {Array.from({ length: Math.ceil(clients.filter(c => !clientSearch || c.name?.toLowerCase().includes(clientSearch.toLowerCase()) || c.email?.toLowerCase().includes(clientSearch.toLowerCase())).length / CLIENTS_PER_PAGE) }, (_, i) => i + 1).map(page => (
-                        <button
-                          key={page}
-                          onClick={() => setClientPage(page)}
-                          className={`w-8 h-8 rounded-lg text-sm font-medium ${
-                            clientPage === page ? 'bg-pink-500 text-white' : 'text-neutral-600 hover:bg-neutral-100'
-                          }`}
-                        >
-                          {page}
+                {(() => {
+                  const filteredClients = clients.filter(c => !clientSearch || 
+                    c.name?.toLowerCase().includes(clientSearch.toLowerCase()) ||
+                    c.email?.toLowerCase().includes(clientSearch.toLowerCase()))
+                  const totalPages = Math.ceil(filteredClients.length / CLIENTS_PER_PAGE)
+                  
+                  if (filteredClients.length <= CLIENTS_PER_PAGE) return null
+                  
+                  return (
+                    <div className="px-6 py-4 border-t border-neutral-100 flex items-center justify-between">
+                      <p className="text-sm text-neutral-500">
+                        Showing {(clientPage - 1) * CLIENTS_PER_PAGE + 1} to {Math.min(clientPage * CLIENTS_PER_PAGE, filteredClients.length)} of {filteredClients.length}
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <button onClick={() => setClientPage(p => Math.max(1, p - 1))} disabled={clientPage === 1} className="p-2 rounded-lg border border-neutral-200 disabled:opacity-50">
+                          <ChevronLeft className="w-4 h-4" />
                         </button>
-                      ))}
-                      <button
-                        onClick={() => setClientPage(p => Math.min(Math.ceil(clients.filter(c => !clientSearch || c.name?.toLowerCase().includes(clientSearch.toLowerCase()) || c.email?.toLowerCase().includes(clientSearch.toLowerCase())).length / CLIENTS_PER_PAGE), p + 1))}
-                        disabled={clientPage >= Math.ceil(clients.filter(c => !clientSearch || c.name?.toLowerCase().includes(clientSearch.toLowerCase()) || c.email?.toLowerCase().includes(clientSearch.toLowerCase())).length / CLIENTS_PER_PAGE)}
-                        className="p-2 rounded-lg border border-neutral-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-neutral-50"
-                      >
-                        <ChevronRight className="w-4 h-4" />
-                      </button>
+                        {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                          <button key={page} onClick={() => setClientPage(page)} className={`w-8 h-8 rounded-lg text-sm font-medium ${clientPage === page ? 'bg-pink-500 text-white' : 'text-neutral-600 hover:bg-neutral-100'}`}>
+                            {page}
+                          </button>
+                        ))}
+                        <button onClick={() => setClientPage(p => Math.min(totalPages, p + 1))} disabled={clientPage >= totalPages} className="p-2 rounded-lg border border-neutral-200 disabled:opacity-50">
+                          <ChevronRight className="w-4 h-4" />
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )
+                })()}
               </>
             )}
           </div>
