@@ -1258,14 +1258,7 @@ export default function AdminDashboard() {
                         .map((client) => (
                         <tr key={client.id} className="hover:bg-neutral-50 transition-colors">
                           <td className="px-6 py-4">
-                            <div className="flex items-center gap-3">
-                              <div className="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center shrink-0">
-                                <span className="text-pink-600 font-semibold text-sm">
-                                  {(client.full_name || client.name || '?').charAt(0).toUpperCase()}
-                                </span>
-                              </div>
-                              <span className="text-sm font-medium text-neutral-900">{client.full_name || client.name}</span>
-                            </div>
+                            <span className="text-sm font-medium text-neutral-900">{client.full_name || client.name}</span>
                           </td>
                           <td className="px-6 py-4 text-sm text-neutral-600">{client.email}</td>
                           <td className="px-6 py-4 text-sm text-neutral-600">{client.phone || '-'}</td>
