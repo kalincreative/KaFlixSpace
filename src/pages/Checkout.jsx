@@ -36,27 +36,38 @@ export default function Checkout() {
   }
 
   const sendConfirmationEmail = async (bookingData) => {
+    // First, let's verify we have required credentials
+    console.log('EmailJS Config:', { 
+      serviceId: EMAILJS_SERVICE_ID, 
+      templateId: EMAILJS_TEMPLATE_ID,
+      publicKey: EMAILJS_PUBLIC_KEY ? 'Set' : 'MISSING'
+    })
+    
     try {
       const templateParams = {
         client_name: bookingData.clientName,
         space_name: bookingData.spaceName,
         booking_date: bookingData.date,
         time_slot: bookingData.timeRange,
-        location: bookingData.location || 'KaFlix Space, Kuala Lumpur',
+        location: 'KaFlix Space, Kuala Lumpur',
         to_email: bookingData.clientEmail,
       }
       
-      console.log('Sending email to:', bookingData.clientEmail, 'with params:', templateParams)
+      console.log('Attempting to send email to:', bookingData.clientEmail)
+      console.log('Template params:', templateParams)
       
       const response = await emailjs.send(
-        EMAILJS_SERVICE_ID,
-        EMAILJS_TEMPLATE_ID,
-        templateParams
+        String(EMAILJS_SERVICE_ID),
+        String(EMAILJS_TEMPLATE_ID),
+        templateParams,
+        String(EMAILJS_PUBLIC_KEY)
       )
-      console.log('Email sent successfully:', response.status, response.text)
+      
+      console.log('SUCCESS! Email response:', response)
+      alert(`Email sent successfully! Status: ${response.status}`)
     } catch (error) {
-      console.error('EmailJS error:', error)
-      console.error('Full error object:', JSON.stringify(error, null, 2))
+      console.error('EmailJS FAILED:', error)
+      alert(`Email failed to send. Error: ${error?.text || error?.message || 'Unknown error'}\nStatus: ${error?.status}`)
     }
   }
 
