@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, Calendar, ChevronDown, Users, Home, Wallet, TrendingUp, CheckCircle, XCircle, LogOut, CreditCard, BarChart3, CalendarDays, Loader2, ChevronLeft, ChevronRight, CalendarRange, Search, User, Mail, Phone, Wrench, AlertCircle, Filter, CheckSquare, Square, Trash2 } from 'lucide-react'
+import { LayoutDashboard, Calendar, ChevronDown, Users, Home, Wallet, TrendingUp, CheckCircle, XCircle, LogOut, CreditCard, BarChart3, CalendarDays, Loader2, ChevronLeft, ChevronRight, CalendarRange, Search, User, Mail, Phone, Wrench, AlertCircle, Filter, CheckSquare, Square, Trash2, ArrowUpRight, ArrowDownRight, Clock, TrendingUp as TrendingUpIcon, CalendarCheck, DollarSign, Clock3 } from 'lucide-react'
 import { supabase, getBookings, updateBookingStatus as supabaseUpdateStatus, getClients } from '../lib/supabase'
 import { ToastContainer, useToast } from '../components/Toast'
 
@@ -46,13 +46,14 @@ export default function AdminDashboard() {
   })
 
   const getActiveLinkFromPath = (path) => {
+    if (path === '/admin/dashboard' || path === '/admin/dashboard/') return 'dashboard'
     if (path.includes('/calendar')) return 'calendar'
     if (path.includes('/clients')) return 'clients'
     if (path.includes('/spaces')) return 'spaces'
     if (path.includes('/bookings')) return 'all-bookings'
     if (path.includes('/finance/payment')) return 'payment'
     if (path.includes('/finance/report')) return 'report'
-    return 'all-bookings'
+    return 'dashboard'
   }
 
   const [activeLink, setActiveLink] = useState(getActiveLinkFromPath(location.pathname))
@@ -399,6 +400,8 @@ export default function AdminDashboard() {
 
       <main className="flex-1 p-8">
         <ToastContainer toasts={toasts} removeToast={removeToast} />
+        
+        {/* Page Header */}
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-neutral-900">
             {activeLink === 'all-bookings' ? 'Booking Management' : 
@@ -408,23 +411,253 @@ export default function AdminDashboard() {
              activeLink === 'payment' ? 'Payment History' :
              activeLink === 'report' ? 'Revenue Report' : 'Dashboard'}
           </h2>
+          <p className="text-neutral-500 mt-1">
+            {activeLink === 'dashboard' ? 'Overview of your business performance' : ''}
+          </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {stats.map((stat, idx) => (
-            <div key={idx} className="bg-white rounded-xl p-6 shadow-sm border border-neutral-100">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-neutral-500 text-sm">{stat.label}</p>
-                  <p className="text-2xl font-bold text-neutral-900 mt-1">{stat.value}</p>
+        {/* Dashboard Home View */}
+        {activeLink === 'dashboard' && (
+          <div className="space-y-6">
+            {/* Stats Cards with Trends */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {/* Total Bookings */}
+              <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-100 hover:shadow-md transition-shadow">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-neutral-500 text-sm font-medium">Total Bookings</p>
+                    <p className="text-3xl font-bold text-neutral-900 mt-2">{bookings.length}</p>
+                    <div className="flex items-center gap-1 mt-2 text-green-600 text-sm">
+                      <ArrowUpRight className="w-4 h-4" />
+                      <span>+12% from last month</span>
+                    </div>
+                  </div>
+                  <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center">
+                    <CalendarCheck className="w-6 h-6 text-blue-600" />
+                  </div>
                 </div>
-                <div className="w-12 h-12 rounded-full bg-[#FF1493]/10 flex items-center justify-center">
-                  <stat.icon className="w-6 h-6 text-[#FF1493]" />
+              </div>
+
+              {/* Pending Requests */}
+              <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-100 hover:shadow-md transition-shadow">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-neutral-500 text-sm font-medium">Pending Requests</p>
+                    <p className="text-3xl font-bold text-neutral-900 mt-2">{pendingCount}</p>
+                    <div className="flex items-center gap-1 mt-2 text-yellow-600 text-sm">
+                      <Clock className="w-4 h-4" />
+                      <span>Needs attention</span>
+                    </div>
+                  </div>
+                  <div className="w-12 h-12 rounded-xl bg-yellow-100 flex items-center justify-center">
+                    <Clock3 className="w-6 h-6 text-yellow-600" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Total Revenue */}
+              <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-100 hover:shadow-md transition-shadow">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-neutral-500 text-sm font-medium">Total Revenue</p>
+                    <p className="text-3xl font-bold text-neutral-900 mt-2">RM {totalRevenue.toLocaleString()}</p>
+                    <div className="flex items-center gap-1 mt-2 text-green-600 text-sm">
+                      <TrendingUpIcon className="w-4 h-4" />
+                      <span>+8% from last month</span>
+                    </div>
+                  </div>
+                  <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center">
+                    <DollarSign className="w-6 h-6 text-green-600" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Approved Rate */}
+              <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-100 hover:shadow-md transition-shadow">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <p className="text-neutral-500 text-sm font-medium">Approval Rate</p>
+                    <p className="text-3xl font-bold text-neutral-900 mt-2">
+                      {bookings.length > 0 
+                        ? Math.round((approvedBookings.length / bookings.length) * 100)
+                        : 0}%
+                    </p>
+                    <div className="flex items-center gap-1 mt-2 text-green-600 text-sm">
+                      <ArrowUpRight className="w-4 h-4" />
+                      <span>+5% from last month</span>
+                    </div>
+                  </div>
+                  <div className="w-12 h-12 rounded-xl bg-pink-100 flex items-center justify-center">
+                    <BarChart3 className="w-6 h-6 text-pink-600" />
+                  </div>
                 </div>
               </div>
             </div>
-          ))}
-        </div>
+
+            {/* Revenue Chart & Quick Actions Row */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Revenue Overview Chart */}
+              <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-neutral-100">
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <h3 className="text-lg font-semibold text-neutral-900">Revenue Overview</h3>
+                    <p className="text-sm text-neutral-500">Last 6 months performance</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <button className="px-3 py-1.5 text-sm bg-pink-50 text-pink-600 rounded-lg font-medium">Monthly</button>
+                    <button className="px-3 py-1.5 text-sm text-neutral-500 hover:bg-neutral-50 rounded-lg">Weekly</button>
+                  </div>
+                </div>
+                
+                {/* Simple Bar Chart */}
+                <div className="flex items-end justify-between h-48 gap-4">
+                  {getRevenueByMonth().map((item, idx) => {
+                    const maxRevenue = Math.max(...getRevenueByMonth().map(m => m.revenue), 1)
+                    const height = item.revenue > 0 ? (item.revenue / maxRevenue) * 100 : 5
+                    return (
+                      <div key={idx} className="flex-1 flex flex-col items-center gap-2">
+                        <div className="w-full flex flex-col items-center justify-end h-36">
+                          <div 
+                            className="w-full max-w-12 bg-gradient-to-t from-pink-500 to-pink-400 rounded-t-lg transition-all duration-500 hover:from-pink-600 hover:to-pink-500"
+                            style={{ height: `${height}%` }}
+                          />
+                        </div>
+                        <span className="text-xs text-neutral-500 font-medium">{item.month}</span>
+                        <span className="text-xs font-semibold text-neutral-700">
+                          {item.revenue > 0 ? `RM ${(item.revenue / 1000).toFixed(1)}k` : 'RM 0'}
+                        </span>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+
+              {/* Quick Actions & Recent Activity */}
+              <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-100">
+                <h3 className="text-lg font-semibold text-neutral-900 mb-4">Quick Actions</h3>
+                <div className="space-y-3">
+                  <button 
+                    onClick={() => handleMenuClick(sidebarLinks[1])}
+                    className="w-full flex items-center gap-3 p-3 rounded-xl bg-blue-50 hover:bg-blue-100 transition-colors"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                      <Calendar className="w-5 h-5 text-blue-600" />
+                    </div>
+                    <div className="text-left">
+                      <p className="text-sm font-medium text-neutral-900">View All Bookings</p>
+                      <p className="text-xs text-neutral-500">{bookings.length} total bookings</p>
+                    </div>
+                  </button>
+
+                  <button 
+                    onClick={() => handleMenuClick(sidebarLinks[3])}
+                    className="w-full flex items-center gap-3 p-3 rounded-xl bg-green-50 hover:bg-green-100 transition-colors"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
+                      <Users className="w-5 h-5 text-green-600" />
+                    </div>
+                    <div className="text-left">
+                      <p className="text-sm font-medium text-neutral-900">Manage Clients</p>
+                      <p className="text-xs text-neutral-500">{clients.length} registered clients</p>
+                    </div>
+                  </button>
+
+                  <button 
+                    onClick={() => handleMenuClick(sidebarLinks[6])}
+                    className="w-full flex items-center gap-3 p-3 rounded-xl bg-purple-50 hover:bg-purple-100 transition-colors"
+                  >
+                    <div className="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center">
+                      <BarChart3 className="w-5 h-5 text-purple-600" />
+                    </div>
+                    <div className="text-left">
+                      <p className="text-sm font-medium text-neutral-900">View Reports</p>
+                      <p className="text-xs text-neutral-500">Revenue analytics</p>
+                    </div>
+                  </button>
+                </div>
+
+                {/* Recent Activity */}
+                <div className="mt-6 pt-6 border-t border-neutral-100">
+                  <h4 className="text-sm font-semibold text-neutral-900 mb-4">Recent Bookings</h4>
+                  <div className="space-y-3">
+                    {bookings.slice(0, 5).map((booking) => (
+                      <div key={booking.id} className="flex items-center gap-3">
+                        <div className={`w-2 h-2 rounded-full ${
+                          booking.status === 'approved' ? 'bg-green-500' :
+                          booking.status === 'rejected' ? 'bg-red-500' : 'bg-yellow-500'
+                        }`} />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-neutral-900 truncate">{booking.client_name}</p>
+                          <p className="text-xs text-neutral-500">{booking.space_name}</p>
+                        </div>
+                        <span className="text-xs text-neutral-400">{formatDate(booking.booking_date)}</span>
+                      </div>
+                    ))}
+                    {bookings.length === 0 && (
+                      <p className="text-sm text-neutral-500 text-center py-4">No recent bookings</p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Booking Status Distribution */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Status Breakdown */}
+              <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-100">
+                <h3 className="text-lg font-semibold text-neutral-900 mb-6">Booking Status Breakdown</h3>
+                <div className="space-y-4">
+                  {[
+                    { label: 'Approved', count: approvedBookings.length, color: 'bg-green-500', percent: bookings.length > 0 ? (approvedBookings.length / bookings.length) * 100 : 0 },
+                    { label: 'Pending', count: pendingCount, color: 'bg-yellow-500', percent: bookings.length > 0 ? (pendingCount / bookings.length) * 100 : 0 },
+                    { label: 'Rejected', count: bookings.filter(b => b.status === 'rejected').length, color: 'bg-red-500', percent: bookings.length > 0 ? (bookings.filter(b => b.status === 'rejected').length / bookings.length) * 100 : 0 },
+                  ].map((item) => (
+                    <div key={item.label} className="flex items-center gap-4">
+                      <div className="w-24 text-sm font-medium text-neutral-700">{item.label}</div>
+                      <div className="flex-1 bg-neutral-100 rounded-full h-3 overflow-hidden">
+                        <div 
+                          className={`h-full ${item.color} rounded-full transition-all duration-500`}
+                          style={{ width: `${item.percent}%` }}
+                        />
+                      </div>
+                      <div className="w-16 text-sm text-neutral-600 text-right">{item.count}</div>
+                      <div className="w-12 text-sm text-neutral-500 text-right">{Math.round(item.percent)}%</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Top Spaces */}
+              <div className="bg-white rounded-2xl p-6 shadow-sm border border-neutral-100">
+                <h3 className="text-lg font-semibold text-neutral-900 mb-6">Popular Spaces</h3>
+                <div className="space-y-4">
+                  {adminSpaces.slice(0, 5).map((space, idx) => {
+                    const spaceBookings = bookings.filter(b => b.space_name === space.name).length
+                    const maxBookings = Math.max(...adminSpaces.slice(0, 5).map(s => bookings.filter(b => b.space_name === s.name).length), 1)
+                    return (
+                      <div key={space.id} className="flex items-center gap-4">
+                        <span className="w-6 h-6 rounded-full bg-pink-100 text-pink-600 text-sm font-semibold flex items-center justify-center">
+                          {idx + 1}
+                        </span>
+                        <div className="flex-1">
+                          <p className="text-sm font-medium text-neutral-900">{space.name}</p>
+                          <p className="text-xs text-neutral-500">{space.capacity} pax • {space.price}/hr</p>
+                        </div>
+                        <div className="w-20 bg-neutral-100 rounded-full h-2 overflow-hidden">
+                          <div 
+                            className="h-full bg-pink-500 rounded-full"
+                            style={{ width: `${(spaceBookings / maxBookings) * 100}%` }}
+                          />
+                        </div>
+                        <span className="text-sm text-neutral-600 w-16 text-right">{spaceBookings} bookings</span>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
 {activeLink === 'all-bookings' && (
           <div className="bg-white rounded-xl shadow-sm border border-neutral-100 overflow-hidden">
