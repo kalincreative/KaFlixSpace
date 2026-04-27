@@ -42,20 +42,19 @@ export default function Checkout() {
         space_name: bookingData.spaceName,
         booking_date: bookingData.date,
         time_slot: bookingData.timeRange,
+        to_email: bookingData.clientEmail,
       }
-      
-      emailjs.init(EMAILJS_PUBLIC_KEY)
-      console.log('Sending to:', bookingData.clientEmail)
       
       const response = await emailjs.send(
         EMAILJS_SERVICE_ID,
         EMAILJS_TEMPLATE_ID,
-        templateParams
+        templateParams,
+        EMAILJS_PUBLIC_KEY
       )
       console.log('Email sent:', response.status)
     } catch (error) {
       console.error('EmailJS error:', error)
-      console.log('Booking data received:', bookingData.clientEmail)
+      console.log('EmailJS 4th param approach - trying alternative...')
     }
   }
 
