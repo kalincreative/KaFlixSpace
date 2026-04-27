@@ -7,7 +7,7 @@ import { createBooking, createOrUpdateClient } from '../lib/supabase'
 
 const EMAILJS_SERVICE_ID = 'service_736nhhr'
 const EMAILJS_TEMPLATE_ID = 'template_hor7sba'
-const EMAILJS_PUBLIC_KEY = 'Y6Fn0DNkn3OKRxmeb8'
+const EMAILJS_PUBLIC_KEY = '6Fn0DNkn3OKRxmeb8'
 
 export default function Checkout() {
   const navigate = useNavigate()
@@ -36,13 +36,6 @@ export default function Checkout() {
   }
 
   const sendConfirmationEmail = async (bookingData) => {
-    // First, let's verify we have required credentials
-    console.log('EmailJS Config:', { 
-      serviceId: EMAILJS_SERVICE_ID, 
-      templateId: EMAILJS_TEMPLATE_ID,
-      publicKey: EMAILJS_PUBLIC_KEY ? 'Set' : 'MISSING'
-    })
-    
     try {
       const templateParams = {
         client_name: bookingData.clientName,
@@ -50,24 +43,17 @@ export default function Checkout() {
         booking_date: bookingData.date,
         time_slot: bookingData.timeRange,
         location: 'KaFlix Space, Kuala Lumpur',
-        to_email: bookingData.clientEmail,
       }
       
-      console.log('Attempting to send email to:', bookingData.clientEmail)
-      console.log('Template params:', templateParams)
-      
-      const response = await emailjs.send(
-        String(EMAILJS_SERVICE_ID),
-        String(EMAILJS_TEMPLATE_ID),
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
         templateParams,
-        String(EMAILJS_PUBLIC_KEY)
+        EMAILJS_PUBLIC_KEY
       )
-      
-      console.log('SUCCESS! Email response:', response)
-      alert(`Email sent successfully! Status: ${response.status}`)
+      console.log('Confirmation email sent successfully')
     } catch (error) {
-      console.error('EmailJS FAILED:', error)
-      alert(`Email failed to send. Error: ${error?.text || error?.message || 'Unknown error'}\nStatus: ${error?.status}`)
+      console.error('EmailJS error:', error?.text || error?.message || error)
     }
   }
 
