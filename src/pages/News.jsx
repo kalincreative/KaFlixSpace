@@ -46,15 +46,16 @@ export default function News() {
       <section className="py-12 px-4">
         <div className="max-w-4xl mx-auto space-y-6">
           {articles.map((article, idx) => (
-            <div 
+            <Link 
               key={article.id}
-              className={`bg-white rounded-2xl overflow-hidden border border-neutral-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all flex flex-col md:flex-row`}
+              to={`/news/${article.id}`}
+              className={`bg-white rounded-2xl overflow-hidden border border-neutral-100 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all flex flex-col md:flex-row cursor-pointer group`}
             >
-              <div className="md:w-1/3 aspect-video md:aspect-auto">
+              <div className="md:w-1/3 aspect-video md:aspect-auto overflow-hidden">
                 <img 
                   src={article.image} 
                   alt={article.title}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
               </div>
               <div className="flex-1 p-6 flex flex-col justify-center">
@@ -66,14 +67,11 @@ export default function News() {
                 </div>
                 <h2 className="text-xl font-bold text-neutral-900 mb-2">{article.title}</h2>
                 <p className="text-neutral-600 mb-4">{article.excerpt}</p>
-                <Link 
-                  to={`/news/${article.id}`} 
-                  className="text-pink-500 font-medium flex items-center gap-1 hover:gap-2 transition-all w-fit"
-                >
+                <span className="text-pink-500 font-medium flex items-center gap-1 hover:gap-2 transition-all w-fit">
                   Read More <ArrowRight className="w-4 h-4" />
-                </Link>
+                </span>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </section>
