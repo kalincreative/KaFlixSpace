@@ -7,16 +7,11 @@ export default function HeroSection() {
     <div className="relative h-screen w-full overflow-hidden bg-[#101010]">
       {/* Layer 1: Background Image */}
       <div className="absolute inset-0 z-0">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          poster="/hero-image.png"
+        <img
+          src="/hero-image.png"
+          alt="Background"
           className="w-full h-full object-cover"
-        >
-          <source src="/herovideo.mp4" type="video/mp4" />
-        </video>
+        />
       </div>
 
       {/* Layer 2: Typography */}
